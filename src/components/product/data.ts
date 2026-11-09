@@ -21,9 +21,13 @@ export type Size = {
   length: number;
   depth: number;
   capacity?: string;
+  /** Empty weight, kg. */
+  weight?: number;
   /** Variant cut-out (with step). */
   image: string;
   tubOnlyImage?: string;
+  /** Black-finish cut-outs, shown when Black is selected. */
+  black: { image: string; tubOnlyImage?: string };
   withChiller: Pricing;
   /** Only the Solo is sold as tub only. */
   tubOnly?: Pricing;
@@ -39,8 +43,10 @@ export const SIZES: Record<SizeId, Size> = {
     length: 135,
     depth: 76,
     capacity: "260 L",
+    weight: 95, // placeholder estimate
     image: "/products/niseko/variant-solo.webp",
     tubOnlyImage: "/products/niseko/variant-solo-tub.webp",
+    black: { image: "/products/niseko/black-1.webp", tubOnlyImage: "/products/niseko/black-2.webp" },
     withChiller: { price: 5577, compareAt: 8495, save: 2918, discountPct: 34 },
     tubOnly: { price: 4995, compareAt: 7995, save: 3000, discountPct: 38 },
   },
@@ -53,7 +59,10 @@ export const SIZES: Record<SizeId, Size> = {
     width: 88,
     length: 159,
     depth: 79,
+    capacity: "440 L", // placeholder estimate, scaled from Solo
+    weight: 125, // placeholder estimate
     image: "/products/niseko/variant-lux.webp",
+    black: { image: "/products/niseko/black-3.webp" },
     withChiller: { price: 5877, compareAt: 8995, save: 3118, discountPct: 35 },
   },
   grande: {
@@ -64,7 +73,10 @@ export const SIZES: Record<SizeId, Size> = {
     width: 113,
     length: 173,
     depth: 75,
+    capacity: "580 L", // placeholder estimate, scaled from Solo
+    weight: 160, // placeholder estimate
     image: "/products/niseko/variant-grande.webp",
+    black: { image: "/products/niseko/black-4.webp" },
     withChiller: { price: 7177, compareAt: 12995, save: 5818, discountPct: 45 },
   },
 };
@@ -98,8 +110,11 @@ export const dims = (s: Size) => `W${s.width}\u00a0× L${s.length}\u00a0× D${s.
 export const pricingFor = (s: Size, tubOnly: boolean): Pricing =>
   tubOnly && s.tubOnly ? s.tubOnly : s.withChiller;
 
-export const imageFor = (s: Size, tubOnly: boolean) =>
-  tubOnly && s.tubOnlyImage ? s.tubOnlyImage : s.image;
+/** The size's cut-out for the chosen finish (and tub-only, where the size offers it). */
+export const imageFor = (s: Size, tubOnly: boolean, finish: Finish) => {
+  const set = finish === "Black" ? s.black : s;
+  return tubOnly && set.tubOnlyImage ? set.tubOnlyImage : set.image;
+};
 
 export const variantName = (s: Size, tubOnly: boolean, finish: Finish) =>
   `${tubOnly && s.tubOnly ? `${s.name} (Tub Only)` : `${s.name} + 1HP Chiller`} · ${finish}`;

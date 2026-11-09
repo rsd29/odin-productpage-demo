@@ -4,7 +4,6 @@ import { useLenis } from "lenis/react";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/Button";
 import { CampaignBadge } from "../ui/CampaignBadge";
-import { LiquidGlass } from "../ui/LiquidGlass";
 import { PRODUCT_NAME, SIZES, money, priceLabel, pricingFor, variantName } from "./data";
 import { useProduct } from "./ProductContext";
 
@@ -44,7 +43,7 @@ export function StickyBar() {
     };
   }, [ctaEl, setVisible]);
 
-  // Adaptive contrast (same as the header): go light while the glass sits over a dark section.
+  // Adaptive contrast: a solid grey bar on light sections, a solid cream one over dark sections.
   useEffect(() => {
     const probe = () => {
       const y = window.innerHeight - STICKY_BAR.bottom - STICKY_BAR.height / 2;
@@ -64,8 +63,10 @@ export function StickyBar() {
     };
   }, []);
 
-  const ink = onDark ? "text-odin-cream" : "text-odin-grey";
-  const sub = onDark ? "text-muted-on-dark" : "text-muted";
+  // Solid fill (not glass) so it stays legible over photos and busy sections.
+  const fill = onDark ? "bg-odin-cream" : "bg-odin-grey";
+  const ink = onDark ? "text-odin-grey" : "text-odin-cream";
+  const sub = onDark ? "text-muted" : "text-muted-on-dark";
 
   return (
     <div
@@ -81,10 +82,9 @@ export function StickyBar() {
       style={{ bottom: STICKY_BAR.bottom }}
     >
       <div
-        className="relative flex w-[760px] max-w-full items-center gap-3 overflow-hidden rounded-full py-[6px] pl-6 pr-[6px] max-lg:pl-5"
+        className={`relative flex w-[760px] max-w-full items-center gap-3 overflow-hidden rounded-full py-[6px] pl-6 pr-[6px] shadow-[0_12px_32px_rgba(0,0,0,0.25)] transition-colors max-lg:pl-5 ${EASE} ${fill}`}
         style={{ height: STICKY_BAR.height }}
       >
-        <LiquidGlass radius={STICKY_BAR.height / 2} className="rounded-full" />
 
         <p className={`relative min-w-0 flex-1 truncate transition-colors ${EASE}`}>
           <span className={`text-h5 ${ink}`}>{PRODUCT_NAME}</span>
@@ -104,7 +104,7 @@ export function StickyBar() {
           />
         </div>
         <Button
-          variant={onDark ? "inverse" : "primary"}
+          variant={onDark ? "primary" : "inverse"}
           className="relative h-10 shrink-0 px-6 py-0 font-display! text-[15px]! font-medium! max-lg:px-5"
           onClick={() => lenis?.scrollTo(0)}
         >

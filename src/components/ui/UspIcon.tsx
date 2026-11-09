@@ -28,11 +28,11 @@ const PATHS = {
 
 export type UspIconName = keyof typeof PATHS;
 
-export function UspIcon({ name }: { name: UspIconName }) {
+export function UspIcon({ name, size = 26 }: { name: UspIconName; size?: number }) {
   return (
     <svg
-      width="26"
-      height="26"
+      width={size}
+      height={size}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

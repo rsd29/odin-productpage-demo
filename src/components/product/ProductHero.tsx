@@ -6,9 +6,9 @@ import { Gallery } from "./Gallery";
 
 export function ProductHero() {
   return (
-    <section className="bg-odin-cream pb-[86px] pt-[62px] max-lg:pb-14 max-lg:pt-4">
-      <Container className="flex flex-col gap-7 max-lg:gap-4">
-        <nav aria-label="Breadcrumb" className="pb-5 max-lg:pb-0">
+    <section className="bg-odin-cream pb-[86px] pt-6 max-lg:pb-14 max-lg:pt-4">
+      <Container className="flex flex-col gap-5 max-lg:gap-4">
+        <nav aria-label="Breadcrumb">
           <ol className="flex flex-wrap items-center gap-x-4 gap-y-2 font-sans text-[11px] font-medium leading-5 tracking-[0.12em] uppercase">
             <li className="flex items-center">
               <Link

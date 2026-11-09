@@ -10,19 +10,24 @@ import {
   type KeyboardEvent,
 } from "react";
 import { FramedImage, type Frame } from "../ui/FramedImage";
+import { preloadImages } from "../ui/preload";
+import { FINISHES, type Finish } from "./data";
 import { useProduct } from "./ProductContext";
 import { STICKY_BAR } from "./StickyBar";
 
-const IMAGES = Array.from(
+const RED_CEDAR = Array.from(
   { length: 15 },
   (_, i) => `/products/niseko/${i + 1}.webp`,
 );
+const BLACK = Array.from({ length: 4 }, (_, i) => `/products/niseko/black-${i + 1}.webp`);
+/** Photos per finish: choosing a colour swaps the gallery and its thumbnails. */
+const GALLERY: Record<Finish, string[]> = { "Red Cedar": RED_CEDAR, Black: BLACK };
 /** Main image width (712 column − 88 thumbs − 12 gap). */
 const MAIN = 612;
-/** Per-image framing (index → focus/zoom); unlisted images are centred square photos shown whole. */
-const FRAME: Record<number, Frame & { ratio?: number }> = {
-  0: { x: 0.49, y: 0.52, zoom: 1.1 },
-  10: { ratio: 1.5, x: 0.45 },
+/** Per-image framing (by path → focus/zoom); unlisted images are centred square photos shown whole. */
+const FRAME: Record<string, Frame & { ratio?: number }> = {
+  [RED_CEDAR[0]]: { x: 0.49, y: 0.52, zoom: 1.1 },
+  [RED_CEDAR[10]]: { ratio: 1.5, x: 0.45 },
 };
 
 /** Pinned below the compact header (45) + gap. */
@@ -53,7 +58,8 @@ const Chevron = ({ up }: { up?: boolean }) => (
 export function Gallery() {
   const [active, setActive] = useState(0);
   // The image being crossfaded out, kept underneath until the new one has faded in.
-  const [prev, setPrev] = useState<number | null>(null);
+  // The image being crossfaded out (by path, so it survives a colour change), kept until the new one is in.
+  const [prev, setPrev] = useState<string | null>(null);
   const [ready, setReady] = useState(true);
   const [edges, setEdges] = useState({ start: false, end: true, v: true });
   const rail = useRef<HTMLDivElement>(null);
@@ -61,14 +67,33 @@ export function Gallery() {
   /** Smooth (lerped) wheel scrolling for the vertical rail, matching the page's Lenis feel. */
   const railLenis = useRef<Lenis | null>(null);
   const thumbs = useRef<(HTMLButtonElement | null)[]>([]);
-  const { stickyBarVisible } = useProduct();
+  const { stickyBarVisible, finish } = useProduct();
+  const images = GALLERY[finish];
+  // A new finish starts its gallery from the first photo, crossfading from the photo on screen.
+  const [galleryFinish, setGalleryFinish] = useState(finish);
+  if (galleryFinish !== finish) {
+    setGalleryFinish(finish);
+    setPrev(GALLERY[galleryFinish][active]);
+    setReady(false);
+    setActive(0);
+  }
+
+  // Preload every finish's photos (main image + thumbnails) when the browser is idle, current finish
+  // first, so switching photo or colour never waits on the network.
+  useEffect(() => {
+    const order = [finish, ...FINISHES.filter((f) => f !== finish)];
+    for (const f of order) {
+      preloadImages(GALLERY[f], "720px");
+      preloadImages(GALLERY[f], "88px");
+    }
+  }, [finish]);
   const top = TOP;
   const bottom = stickyBarVisible ? BOTTOM_WITH_BAR : BOTTOM_GAP;
 
   const select = (i: number) => {
-    const next = (i + IMAGES.length) % IMAGES.length;
+    const next = (i + images.length) % images.length;
     if (next === active) return;
-    setPrev(active);
+    setPrev(images[active]);
     setReady(false);
     setActive(next);
   };
@@ -167,7 +192,7 @@ export function Gallery() {
     const fwd = e.key === "ArrowDown" || e.key === "ArrowRight";
     if (!back && !fwd) return;
     e.preventDefault();
-    const next = (active + (fwd ? 1 : -1) + IMAGES.length) % IMAGES.length;
+    const next = (active + (fwd ? 1 : -1) + images.length) % images.length;
     select(next);
     thumbs.current[next]?.focus({ preventScroll: true });
   };
@@ -207,7 +232,7 @@ export function Gallery() {
             ref={railInner}
             className="flex flex-col gap-[10px] max-xl:w-max max-xl:flex-row max-xl:gap-2 max-lg:px-5"
           >
-            {IMAGES.map((src, i) => {
+            {images.map((src, i) => {
               const on = active === i;
               return (
                 <button
@@ -218,7 +243,7 @@ export function Gallery() {
                   type="button"
                   role="option"
                   aria-selected={on}
-                  aria-label={`Image ${i + 1} of ${IMAGES.length}`}
+                  aria-label={`Image ${i + 1} of ${images.length}`}
                   tabIndex={on ? 0 : -1}
                   onClick={() => select(i)}
                   className="relative size-[88px] shrink-0 cursor-pointer snap-start overflow-hidden rounded-[6px] bg-warm-off-white focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-odin-grey max-xl:size-[72px] max-lg:size-[64px]"
@@ -268,22 +293,17 @@ export function Gallery() {
         {/* Crossfade: the outgoing image stays underneath until the incoming one has loaded and faded in. */}
         {prev !== null && (
           <div key={`prev-${prev}`} className="absolute inset-0">
-            <FramedImage
-              src={IMAGES[prev]}
-              alt=""
-              sizes="720px"
-              {...FRAME[prev]}
-            />
+            <FramedImage src={prev} alt="" sizes="720px" {...FRAME[prev]} />
           </div>
         )}
         <div
-          key={active}
+          key={images[active]}
           className={`absolute inset-0 ${ready ? "animate-gallery-in motion-reduce:animate-none" : "opacity-0"}`}
           onAnimationEnd={() => setPrev(null)}
         >
           <FramedImage
-            src={IMAGES[active]}
-            alt={`Niseko Ice Bath, image ${active + 1} of ${IMAGES.length}`}
+            src={images[active]}
+            alt={`Niseko Ice Bath, image ${active + 1} of ${images.length}`}
             priority={active === 0}
             sizes="720px"
             onLoad={() => {
@@ -292,7 +312,7 @@ export function Gallery() {
               if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
                 setPrev(null);
             }}
-            {...FRAME[active]}
+            {...FRAME[images[active]]}
           />
         </div>
       </div>

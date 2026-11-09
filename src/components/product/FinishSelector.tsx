@@ -8,9 +8,8 @@ export function FinishSelector() {
 
   return (
     <fieldset className="min-w-0">
-      <legend className="text-h5 mb-3 text-odin-grey">
-        Colour <span className="text-body ml-2 text-muted">{finish}</span>
-      </legend>
+      {/* The chosen finish shows in the selector itself, so it isn't repeated beside the label. */}
+      <legend className="text-h5 mb-3 text-odin-grey">Colour</legend>
       <div className="grid grid-cols-2 gap-3">
         {FINISHES.map((option) => (
           <label key={option} className="relative min-w-0 cursor-pointer">

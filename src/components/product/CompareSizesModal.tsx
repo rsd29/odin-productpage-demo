@@ -5,7 +5,7 @@ import { useLenis } from "lenis/react";
 import { useEffect, useRef, type ReactNode } from "react";
 import { Button } from "../ui/Button";
 import { CampaignBadge } from "../ui/CampaignBadge";
-import { FINISHES, SIZES, SIZE_ORDER, dims, money, priceLabel, type SizeId } from "./data";
+import { FINISHES, SIZES, SIZE_ORDER, dims, imageFor, money, priceLabel, type SizeId } from "./data";
 import { useProduct } from "./ProductContext";
 
 const ROWS: [string, (id: SizeId) => ReactNode][] = [
@@ -33,7 +33,7 @@ const ROWS: [string, (id: SizeId) => ReactNode][] = [
 ];
 
 export function CompareSizesModal() {
-  const { compareOpen, setCompareOpen, size, setSize } = useProduct();
+  const { compareOpen, setCompareOpen, size, setSize, finish } = useProduct();
   const ref = useRef<HTMLDialogElement>(null);
   const lenis = useLenis();
 
@@ -68,8 +68,8 @@ export function CompareSizesModal() {
       <div className="flex flex-col gap-7 px-12 py-10 max-lg:gap-5 max-lg:px-5 max-lg:py-6">
         <div className="flex items-start gap-4">
           <div className="flex min-w-0 flex-1 flex-col gap-2">
-            <h2 id="compare-title" className="text-h5 text-odin-grey">
-              Niseko Ice Bath Sizes: Solo, Lux &amp; Grande
+            <h2 id="compare-title" className="text-h2 text-odin-grey">
+              Niseko Ice Bath sizes
             </h2>
             <p className="text-body text-muted">
               You’re pursuing greatness. Demand a recovery space that can keep up.
@@ -90,7 +90,7 @@ export function CompareSizesModal() {
           {SIZE_ORDER.map((id) => (
             <div key={id} className="flex min-w-0 flex-1 flex-col gap-[10px]">
               <div className="relative h-[150px] w-full overflow-hidden rounded-[8px] max-lg:h-[90px]">
-                <Image src={SIZES[id].image} alt={`Niseko ${SIZES[id].name}`} fill sizes="220px" className="object-cover" />
+                <Image src={imageFor(SIZES[id], false, finish)} alt={`Niseko ${SIZES[id].name}`} fill sizes="220px" className="object-cover" />
                 {size === id && (
                   <span className="text-label-sm absolute left-[10px] top-[10px] rounded-[4px] bg-odin-grey px-2 py-1 text-odin-cream">
                     SELECTED
@@ -127,7 +127,7 @@ export function CompareSizesModal() {
             <Button
               key={id}
               variant={size === id ? "primary" : "secondary"}
-              className="min-w-0 flex-1 max-lg:px-2 max-lg:py-3 max-lg:text-[13px]"
+              className="min-w-0 flex-1 px-5 py-[10px] max-lg:px-2 max-lg:py-2 max-lg:text-[13px]"
               onClick={() => choose(id)}
             >
               Choose {SIZES[id].name}

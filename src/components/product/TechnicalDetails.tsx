@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, type ReactNode } from "react";
+import { FeatureIcon, type FeatureIconName } from "../ui/FeatureIcon";
 import { SIZES, SIZE_ORDER } from "./data";
 
 const FEATURES = [
@@ -17,23 +18,25 @@ const FEATURES = [
   "Fits through standard doors",
 ];
 
-const BENEFITS = [
-  "Faster recovery",
-  "Less soreness and inflammation",
-  "Supports immune function",
-  "Elevates mood",
-  "Sharper mental clarity",
-  "Improves metabolism",
+/** Each benefit with its own icon (rather than a tick), so the list reads as distinct outcomes. */
+const BENEFITS: { label: string; icon: FeatureIconName }[] = [
+  { label: "Faster recovery", icon: "recovery" },
+  { label: "Less soreness and inflammation", icon: "soreness" },
+  { label: "Supports immune function", icon: "immune" },
+  { label: "Elevates mood", icon: "mood" },
+  { label: "Sharper mental clarity", icon: "clarity" },
+  { label: "Improves metabolism", icon: "metabolism" },
 ];
 
-const SIZE_HEAD = SIZE_ORDER.map((id) => SIZES[id].name.toUpperCase());
+// Size names set in the heading face, so they stand out from the values below.
+const SIZE_HEAD = SIZE_ORDER.map((id) => SIZES[id].name);
 const perSize = (fn: (id: (typeof SIZE_ORDER)[number]) => string) => SIZE_ORDER.map(fn);
 
 function SpecTable({ head, rows }: { head?: string[]; rows: [string, ...string[]][] }) {
   return (
     <div className="flex flex-col pl-[30px] max-lg:pl-0">
       {head && (
-        <div className="text-label-sm flex items-center gap-2 py-2 text-muted">
+        <div className="text-h5 flex items-center gap-2 py-2 text-odin-grey">
           <span className="w-[150px] shrink-0 max-lg:w-[96px]" />
           {head.map((h) => (
             <span key={h} className="flex-1">
@@ -61,17 +64,43 @@ function SpecTable({ head, rows }: { head?: string[]; rows: [string, ...string[]
   );
 }
 
-/** Quiet text columns aligned with the accordion title, with hairlines separating rows. */
+/** Odin-grey tick before each feature / benefit. */
+const Tick = () => (
+  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" className="shrink-0 text-odin-grey">
+    <path d="m3.5 8.25 3 3 6-6.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+/** Ticked features in one column (some products have long feature names), aligned with the accordion title. */
 function PointGrid({ items }: { items: string[] }) {
   return (
-    <ul className="grid grid-cols-2 gap-x-6 pl-[30px] max-lg:grid-cols-1">
+    <ul className="flex flex-col pl-[30px]">
       {items.map((label, i) => (
         <li
           key={label}
-          // Hairlines between rows: every row on phones (one column), from the second row on desktop (two columns).
-          className={`text-body flex min-w-0 items-center py-3 text-olive-grey ${i > 0 ? "max-lg:border-t-[0.5px] max-lg:border-line" : ""} ${i > 1 ? "lg:border-t-[0.5px] lg:border-line" : ""}`}
+          className={`text-body flex min-w-0 items-center gap-[10px] py-3 text-olive-grey ${i > 0 ? "border-t-[0.5px] border-line" : ""}`}
         >
+          <Tick />
           {label}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Benefits in one column, each with its own icon in a soft disc. */
+function BenefitList() {
+  return (
+    <ul className="flex flex-col pl-[30px]">
+      {BENEFITS.map((b, i) => (
+        <li
+          key={b.label}
+          className={`flex min-w-0 items-center gap-3 py-[10px] ${i > 0 ? "border-t-[0.5px] border-line" : ""}`}
+        >
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-warm-off-white text-odin-grey">
+            <FeatureIcon name={b.icon} size={20} />
+          </span>
+          <span className="text-h5 text-odin-grey">{b.label}</span>
         </li>
       ))}
     </ul>
@@ -80,7 +109,7 @@ function PointGrid({ items }: { items: string[] }) {
 
 const ITEMS: { id: string; title: string; icon: string; content: ReactNode }[] = [
   { id: "features", title: "Features", icon: "/figma/hero/acc-features.svg", content: <PointGrid items={FEATURES} /> },
-  { id: "benefits", title: "Benefits", icon: "/figma/hero/acc-features.svg", content: <PointGrid items={BENEFITS} /> },
+  { id: "benefits", title: "Benefits", icon: "/figma/hero/acc-benefits.svg", content: <BenefitList /> },
   {
     id: "dimensions",
     title: "Dimensions",
@@ -106,7 +135,15 @@ const ITEMS: { id: string; title: string; icon: string; content: ReactNode }[] =
         head={SIZE_HEAD}
         rows={[
           ["Capacity", ...perSize((id) => SIZES[id].capacity ?? "TBC")],
-          ["Weight", "TBC", "TBC", "TBC"],
+          ["Weight (empty)", ...perSize((id) => (SIZES[id].weight ? `${SIZES[id].weight} kg` : "TBC"))],
+          [
+            "Weight (filled)",
+            ...perSize((id) => {
+              const { weight, capacity } = SIZES[id];
+              // Water ≈ 1 kg per litre.
+              return weight && capacity ? `~${weight + parseInt(capacity)} kg` : "TBC";
+            }),
+          ],
         ]}
       />
     ),

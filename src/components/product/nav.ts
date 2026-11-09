@@ -13,6 +13,7 @@ export type MenuLink = { label: string; href?: string };
 
 export type MenuProduct = {
   name: string;
+  href?: string;
   tagline: string;
   img: string;
   /** CSS object-position for the card crop (defaults to centre). */
@@ -33,11 +34,14 @@ export type Menu = {
   all: { eyebrow: string; title: string; links: MenuLink[] };
 };
 
+export const NISEKO_HREF = "/products/niseko-ice-bath";
+
 export const CAMPAIGN_NOTE = "Black Friday prices shown. Ends Sunday";
 
 const solo = SIZES.solo.withChiller;
 const NISEKO: MenuProduct = {
   name: "Niseko Ice Bath",
+  href: NISEKO_HREF,
   tagline: "Red cedar and 316 steel, with a 1HP chiller",
   img: "/products/niseko/2.webp",
   from: true,

@@ -1,14 +1,12 @@
+"use client";
+
+import { useRef } from "react";
+import { ScrollDots } from "../ui/ScrollDots";
 import { Container } from "../ui/Container";
 
 type Testimonial = { quote: string; name: string; role: string };
 
 // Source: masseusehealth.co/products/niseko-ice-bath ("Trusted By Elite Australian Athletes").
-const FEATURED: Testimonial = {
-  quote: "The Niseko Ice Bath is a non-negotiable in my recovery.",
-  name: "Tom Stewart",
-  role: "5× AFL All-Australian",
-};
-
 const ROWS: Testimonial[][] = [
   [
     { quote: "Got all I need for pre/post match recovery at home now.", name: "Jack Crisp", role: "AFL Player, Collingwood" },
@@ -52,34 +50,54 @@ function Card({ t }: { t: Testimonial }) {
 }
 
 /**
- * One endlessly drifting row. The cards are rendered twice back to back (the copy hidden from assistive
- * tech) so translating the track by −50% loops seamlessly. Hover pauses it; reduced motion stops it and
- * lets the row scroll by hand instead. On phones it's a plain swipeable row (one copy, snapping to each
- * card), so every card that runs off the screen can be reached by touch.
+ * Desktop: one endlessly drifting row. The cards are rendered twice back to back (the copy hidden from
+ * assistive tech) so translating the track by −50% loops seamlessly. Hover pauses it; reduced motion stops
+ * it and lets the row scroll by hand instead.
  */
 function MarqueeRow({ items, reverse, duration }: { items: Testimonial[]; reverse?: boolean; duration: number }) {
   return (
-    <div className="overflow-hidden motion-reduce:overflow-x-auto [mask-image:linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)] max-lg:snap-x max-lg:snap-mandatory max-lg:scroll-px-5 max-lg:overflow-x-auto max-lg:[mask-image:none] max-lg:[scrollbar-width:none]">
+    <div className="overflow-hidden motion-reduce:overflow-x-auto [mask-image:linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)]">
       <div
-        className={`flex w-max animate-marquee hover:[animation-play-state:paused] motion-reduce:animate-none max-lg:animate-none max-lg:px-5 ${
+        className={`flex w-max animate-marquee hover:[animation-play-state:paused] motion-reduce:animate-none ${
           reverse ? "[animation-direction:reverse]" : ""
         }`}
         style={{ "--marquee-duration": `${duration}s` } as React.CSSProperties}
       >
         {[0, 1].map((copy) => (
-          <ul
-            key={copy}
-            aria-hidden={copy === 1}
-            className={`flex shrink-0 gap-4 pr-4 max-lg:pr-0 ${copy === 1 ? "max-lg:hidden" : ""}`}
-          >
+          <ul key={copy} aria-hidden={copy === 1} className="flex shrink-0 gap-4 pr-4">
             {items.map((t) => (
-              <li key={t.name} className="flex max-lg:snap-start">
+              <li key={t.name} className="flex">
                 <Card t={t} />
               </li>
             ))}
           </ul>
         ))}
       </div>
+    </div>
+  );
+}
+
+/**
+ * Phones: both rows in one swipeable block, so they move together, with a single set of dots. A two-row
+ * grid filled column by column keeps each row's cards the same height.
+ */
+function SwipeRows() {
+  const row = useRef<HTMLUListElement>(null);
+  const columns = ROWS[0].map((t, i) => [t, ROWS[1][i]].filter(Boolean));
+  return (
+    <div className="flex flex-col gap-6">
+      <ul
+        ref={row}
+        aria-label="Athlete reviews"
+        className="grid auto-cols-[290px] grid-flow-col grid-rows-2 gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain snap-x snap-mandatory scroll-px-5 px-5 [scrollbar-width:none]"
+      >
+        {columns.flat().map((t) => (
+          <li key={t.name} className="flex snap-start">
+            <Card t={t} />
+          </li>
+        ))}
+      </ul>
+      <ScrollDots scroller={row} count={columns.length} tone="dark" />
     </div>
   );
 }
@@ -93,26 +111,14 @@ export function Reviews() {
           <p className="text-body text-muted-on-dark">And by elite Australian athletes.</p>
         </div>
 
-        {/* Featured pull-quote */}
-        {/* Sits below the h2 in the hierarchy: h3 size, one step down from the heading. */}
-        <figure className="flex max-w-[640px] flex-col gap-5">
-          {/* Hanging punctuation: the opening mark sits in the margin so the words align with the heading. */}
-          <blockquote className="text-h3 text-odin-cream [text-indent:-0.4em]">
-            <span className="text-odin-blue">&ldquo;</span>
-            {FEATURED.quote}
-            <span className="text-odin-blue">&rdquo;</span>
-          </blockquote>
-          <figcaption className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="h-px w-8 bg-muted-on-dark" aria-hidden />
-            <span className="text-h5 text-odin-cream">{FEATURED.name}</span>
-            <span className="text-body text-muted-on-dark">{FEATURED.role}</span>
-          </figcaption>
-        </figure>
       </Container>
 
-      <div className="mt-16 flex flex-col gap-4 max-lg:mt-10">
+      <div className="mt-16 flex flex-col gap-4 max-lg:hidden">
         <MarqueeRow items={ROWS[0]} duration={70} />
         <MarqueeRow items={ROWS[1]} duration={80} reverse />
+      </div>
+      <div className="mt-10 lg:hidden">
+        <SwipeRows />
       </div>
     </section>
   );

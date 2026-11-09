@@ -47,7 +47,7 @@ export function PriceLine({ p }: { p: MenuProduct }) {
 
 function ProductCard({ p }: { p: MenuProduct }) {
   return (
-    <a href="#" className="group/item flex min-w-0 flex-col gap-4 rounded-[8px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-odin-grey">
+    <a href={p.href ?? "#"} className="group/item flex min-w-0 flex-col gap-4 rounded-[8px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-odin-grey">
       <span className="relative block aspect-[4/3] overflow-hidden rounded-[8px] bg-warm-off-white">
         <Image
           src={p.img}

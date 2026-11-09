@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Container } from "../ui/Container";
+import { FramedImage } from "../ui/FramedImage";
 import { Signature } from "./Signature";
 
 export function FounderStory() {
@@ -21,8 +22,17 @@ export function FounderStory() {
       <Container className="relative z-10 flex flex-col gap-16 max-lg:gap-8">
         <h2 className="text-h2 text-odin-grey">In his own words, from the Founder of Odin</h2>
         <div className="flex items-start gap-20 max-xl:gap-12 max-lg:flex-col max-lg:gap-8">
-          {/* Founder portrait placeholder (gradient in the Figma) */}
-          <div className="h-[620px] w-[520px] shrink-0 rounded-[8px] max-xl:w-[40%] max-lg:h-[440px] max-lg:w-full bg-[linear-gradient(129.99deg,#47453e_8.33%,#2b2a2a_91.67%)]" />
+          {/* Founder portrait: the right-hand part of the photo, centred on Michael. */}
+          <div className="relative h-[620px] w-[520px] shrink-0 overflow-hidden rounded-[8px] bg-olive-grey max-xl:w-[40%] max-lg:h-[440px] max-lg:w-full">
+            <FramedImage
+              src="/figma/founder/michael-clark.webp"
+              alt="Michael Clark, founder of ODIN"
+              sizes="(min-width: 1024px) 520px, 100vw"
+              ratio={1488 / 1600}
+              x={0.47}
+              y={0.45}
+            />
+          </div>
           <div className="text-body flex min-w-0 flex-1 flex-col gap-7 text-olive-grey">
             <p>
               In 2020, lockdown shut the gyms. Michael had been training four days a week. Suddenly he was
@@ -49,9 +59,13 @@ export function FounderStory() {
               to bring it back. That reset is what he wants everyone to have, properly built and at home.
               It’s why ODIN exists.
             </p>
-            <div className="flex flex-col items-end gap-1">
+            {/*
+              Signed off on the right: the name sits flush right, tucked up under the signature (the signature image
+              has empty space below the ink, hence the negative margin).
+            */}
+            <div className="flex flex-col items-end self-end">
               <Signature />
-              <div className="flex flex-col items-end gap-[2px] whitespace-nowrap">
+              <div className="-mt-9 flex flex-col items-end gap-[2px] whitespace-nowrap max-lg:-mt-8">
                 <p className="text-h4 text-odin-grey">Michael Clark</p>
                 <p className="text-label-sm text-muted">FOUNDER, ODIN</p>
               </div>

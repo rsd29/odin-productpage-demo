@@ -1,4 +1,8 @@
+"use client";
+
 import Image from "next/image";
+import { useRef } from "react";
+import { ScrollDots } from "../ui/ScrollDots";
 import { Container } from "../ui/Container";
 import { FramedImage, type Frame } from "../ui/FramedImage";
 
@@ -66,10 +70,11 @@ const PANEL = 252;
 const FRAME: Frame = { x: 0.5, y: 0.43 };
 
 export function TheScience() {
+  const row = useRef<HTMLDivElement>(null);
   return (
     <section
       data-header-theme="dark"
-      className="relative isolate overflow-hidden bg-black pb-[81px] pt-[78px] max-lg:py-14"
+      className="relative isolate overflow-hidden bg-black pb-16 pt-16 max-lg:py-14"
     >
       <Container className="flex flex-col gap-10 max-lg:gap-8">
         <div className="flex flex-col gap-4">
@@ -79,20 +84,25 @@ export function TheScience() {
             recovery for athletes and high-performers who demand more.
           </p>
         </div>
-        {/* Phones: a swipeable row of tiles that bleeds to the screen edge. */}
-        <div className="flex gap-2 max-lg:-mx-5 max-lg:snap-x max-lg:snap-mandatory max-lg:scroll-px-5 max-lg:overflow-x-auto max-lg:px-5 max-lg:[scrollbar-width:none]">
+        {/*
+          Phones: a swipeable row of tiles that bleeds to the screen edge. Horizontal only: overflow-y is
+          hidden (overflow-x: auto would otherwise make it auto too), and the vertical padding, cancelled by
+          negative margin, leaves room for the glow to fade out before the row's edge clips it.
+        */}
+        <div ref={row} className="flex gap-2 max-lg:-mx-5 max-lg:-my-10 max-lg:snap-x max-lg:snap-mandatory max-lg:scroll-px-5 max-lg:overflow-x-auto max-lg:overflow-y-hidden max-lg:overscroll-x-contain max-lg:px-5 max-lg:py-10 max-lg:[scrollbar-width:none]">
           {TILES.map((t) => (
             <div key={t.tag} className="relative min-w-0 flex-1 max-lg:w-[300px] max-lg:flex-none max-lg:snap-start">
               {/*
                 Ambient glow, like YouTube's ambient mode: a heavily blurred, dimmed copy of the
                 photo behind the tile, bleeding its colours softly into the surrounding black.
+                Phones: kept to the tile's box so it adds no scrollable overflow (the blur still spills past it).
               */}
-              <div aria-hidden className="pointer-events-none absolute -inset-10 -z-10">
+              <div aria-hidden className="pointer-events-none absolute -inset-10 -z-10 max-lg:inset-0">
                 <div className="relative size-full opacity-[0.28] blur-[60px] saturate-[1.6]">
                   <Image src={t.img} alt="" fill sizes="120px" className="object-cover" />
                 </div>
               </div>
-              <article className="relative flex h-[800px] w-full flex-col justify-end overflow-hidden rounded-[8px] bg-black max-lg:h-[560px]">
+              <article className="relative flex h-[620px] w-full flex-col justify-end overflow-hidden rounded-[8px] bg-black max-lg:h-[500px]">
                 {/* The photo fills the whole tile; the text panel sits over its lower part as frosted glass */}
                 <FramedImage src={t.img} alt="" sizes="480px" ratio={1080 / 1920} {...FRAME} />
                 <div
@@ -124,6 +134,7 @@ export function TheScience() {
             </div>
           ))}
         </div>
+        <ScrollDots scroller={row} count={TILES.length} tone="dark" className="lg:hidden" />
       </Container>
     </section>
   );

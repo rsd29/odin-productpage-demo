@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { Button } from "../ui/Button";
 import { CampaignBadge } from "../ui/CampaignBadge";
+import { FeatureIcon, type FeatureIconName } from "../ui/FeatureIcon";
 import { FramedImage, type Frame } from "../ui/FramedImage";
+import { preloadImages } from "../ui/preload";
 import { AfterpayMark, PaymentMarks } from "../ui/PaymentMarks";
 import { UspIcon, type UspIconName } from "../ui/UspIcon";
 import {
@@ -12,7 +14,6 @@ import {
   PRODUCT_NAME,
   SIZES,
   SIZE_ORDER,
-  dims,
   imageFor,
   money,
   priceLabel,
@@ -24,11 +25,12 @@ import { useProduct } from "./ProductContext";
 import { FinishSelector } from "./FinishSelector";
 import { TechnicalDetails } from "./TechnicalDetails";
 
-const HERO_FEATURES = [
-  ["Certified Canadian red cedar", "Sustainably sourced"],
-  ["Marine-grade 316 steel", "Premium stainless steel tub"],
-  ["Powerful 1HP chiller", "Cools to 3°C, heats to 35°C"],
-  ["23 L/min high-flow pump", "Ozone treatment and filtration"],
+/** Key features above the size picker. The chiller ones drop out when "Tub only" is chosen. */
+const HERO_FEATURES: { icon: FeatureIconName; title: string; body: string; chiller?: boolean }[] = [
+  { icon: "cedar", title: "Canadian red cedar", body: "Certified sustainable" },
+  { icon: "steel", title: "Marine-grade 316 steel", body: "Premium stainless steel tub" },
+  { icon: "chiller", title: "Powerful 1HP chiller", body: "Cools to 3°C, heats to 35°C", chiller: true },
+  { icon: "flow", title: "23 L/min high-flow pump", body: "With ozone filtration", chiller: true },
 ];
 
 // Each title is set on two lines so the three columns stay visually even.
@@ -45,6 +47,10 @@ const VARIANT_FRAME: Record<string, Frame> = {
   [`${N}/variant-solo-tub.webp`]: { x: 0.49, y: 0.5, zoom: 1.33 },
   [`${N}/variant-lux.webp`]: { x: 0.485, y: 0.535, zoom: 1.6 },
   [`${N}/variant-grande.webp`]: { x: 0.5, y: 0.5, zoom: 1.38 },
+  [`${N}/black-1.webp`]: { x: 0.506, y: 0.5, zoom: 1.07 },
+  [`${N}/black-2.webp`]: { x: 0.5, y: 0.5, zoom: 1.31 },
+  [`${N}/black-3.webp`]: { x: 0.502, y: 0.5, zoom: 1.25 },
+  [`${N}/black-4.webp`]: { x: 0.5, y: 0.5, zoom: 1.36 },
 };
 
 /** Radio / checkbox indicator matching the Figma radio (16px). */
@@ -107,29 +113,28 @@ function OptionRow({
 }
 
 function SizeCard({ id }: { id: SizeId }) {
-  const { size, setSize, tubOnly } = useProduct();
+  const { size, setSize, tubOnly, finish } = useProduct();
   const s = SIZES[id];
   const selected = size === id;
   const p = pricingFor(s, selected && tubOnly);
-  const src = imageFor(s, selected && tubOnly);
+  const src = imageFor(s, selected && tubOnly, finish);
   return (
     <button
       type="button"
       onClick={() => setSize(id)}
       aria-pressed={selected}
-      className={`flex min-w-0 flex-1 cursor-pointer flex-col items-start gap-[6px] overflow-hidden rounded-[6px] bg-white px-[18px] py-4 text-left max-xl:w-[168px] max-xl:flex-none max-xl:snap-start ${
+      className={`flex min-w-0 flex-1 cursor-pointer flex-col items-start gap-1 overflow-hidden rounded-[6px] bg-white px-[18px] py-4 text-left max-lg:px-3 max-lg:py-3 ${
         selected ? "border-[1.5px] border-odin-grey" : "border border-line hover:border-muted"
       }`}
     >
-      <span className="flex w-full items-center gap-2">
-        <span className="text-h5 text-odin-grey">{s.name}</span>
-        <span className="flex-1" />
+      {/* Name, then price and saving on one line (stacked on phones, where three cards share the width). */}
+      <span className="text-h5 text-odin-grey">{s.name}</span>
+      <span className="flex flex-wrap items-baseline gap-x-2 max-lg:flex-col">
         <span className="text-price whitespace-nowrap text-odin-grey">{priceLabel(p)}</span>
+        <span className="text-price whitespace-nowrap text-muted max-lg:text-[13px]">Save {money(p.save)}</span>
       </span>
-      <span className="text-price text-muted">Save {money(p.save)}</span>
-      <span className="font-sans text-[12px] font-light leading-[1.4] text-balance text-muted">{dims(s)}</span>
       {/* Full-bleed to the card edges; each cut-out is cropped in around the tub so it fills the frame. */}
-      <span className="relative -mx-[18px] -mb-4 mt-1 h-[145px] w-[calc(100%+36px)] shrink-0 overflow-hidden">
+      <span className="relative -mx-[18px] -mb-4 mt-2 h-[145px] w-[calc(100%+36px)] shrink-0 overflow-hidden max-lg:-mx-3 max-lg:-mb-3 max-lg:h-[90px] max-lg:w-[calc(100%+24px)]">
         <FramedImage
           src={src}
           alt={`Niseko ${s.name}`}
@@ -141,7 +146,11 @@ function SizeCard({ id }: { id: SizeId }) {
   );
 }
 
+// Every size's cut-out in every finish, so changing colour swaps the size cards instantly.
+const VARIANT_IMAGES = Object.keys(VARIANT_FRAME);
+
 export function BuyBox() {
+  useEffect(() => preloadImages(VARIANT_IMAGES, "320px"), []);
   const { size, finish, tubOnly, setTubOnly, addons, toggleAddon, setCompareOpen, setCtaEl } = useProduct();
   const s = SIZES[size];
   const p = pricingFor(s, tubOnly);
@@ -166,10 +175,38 @@ export function BuyBox() {
             discount={p.discountPct ? `−${p.discountPct}%` : undefined}
           />
         </div>
-        <p className="text-body flex min-h-[26px] items-center gap-[6px] text-muted">
-          <span>From only $39 p/w with</span>
-          <Image src="/brand/humm.svg" alt="humm" width={61} height={13} className="h-[13px] w-auto shrink-0" />
+        {/* Buy now, pay later: weightier than body copy so it reads as an offer, without being a heading. */}
+        <p className="text-label-md flex min-h-[26px] items-center gap-[6px] text-odin-grey">
+          <span>
+            From only <span className="font-display text-[16px] font-medium">$39 p/w</span> with
+          </span>
+          <Image src="/brand/humm.svg" alt="humm" width={61} height={13} className="h-[15px] w-auto shrink-0" />
         </p>
+      </div>
+
+      {/* Phones: buy straight from the price, rather than scrolling past every option to reach the cart. */}
+      <Button
+        className="h-12 w-full py-0 lg:hidden"
+        aria-label={`Add to Cart: ${PRODUCT_NAME}, ${variantName(s, tubOnly, finish)}`}
+      >
+        Add to Cart
+      </Button>
+
+      {/* Key features (the chiller ones drop out for "Tub only"). */}
+      {/* Two across when each box has room for one-line copy (≥ 240px), otherwise one column. */}
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3">
+        {HERO_FEATURES.filter((f) => !(tubOnly && f.chiller)).map((f) => (
+          // Compact type so every title and description sits on one line, keeping the four boxes even.
+          <div key={f.title} className="flex items-center gap-3 rounded-[6px] bg-warm-off-white px-4 py-[14px]">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white text-odin-grey">
+              <FeatureIcon name={f.icon} size={20} />
+            </span>
+            <span className="flex min-w-0 flex-col gap-[2px]">
+              <span className="font-display text-[14px] font-medium leading-[1.3] whitespace-nowrap text-odin-grey">{f.title}</span>
+              <span className="font-sans text-[13px] font-light leading-[1.4] text-muted">{f.body}</span>
+            </span>
+          </div>
+        ))}
       </div>
 
       <div className="h-px w-full bg-line" />
@@ -186,8 +223,8 @@ export function BuyBox() {
           Which one fits you best?
         </button>
       </div>
-      {/* Narrow buy box: the three cards swipe sideways (bleeding to the screen edge on phones). */}
-      <div className="flex gap-3 max-xl:snap-x max-xl:snap-mandatory max-xl:overflow-x-auto max-xl:[scrollbar-width:none] max-lg:-mx-5 max-lg:scroll-px-5 max-lg:px-5">
+      {/* All three sizes always fit across, phones included (no sideways scrolling). */}
+      <div className="flex gap-3 max-lg:gap-2">
         {SIZE_ORDER.map((id) => (
           <SizeCard key={id} id={id} />
         ))}
@@ -207,26 +244,18 @@ export function BuyBox() {
           note="Cools down to 3°C, heats up to 35°C"
           aside={priceLabel(s.withChiller)}
         />
-        <OptionRow
-          role="radio"
-          indicator="radio"
-          selected={tubOnly}
-          disabled={!s.tubOnly}
-          onClick={() => setTubOnly(true)}
-          title="Tub only"
-          note={s.tubOnly ? `Save ${money(s.tubOnly.save)}` : "Available on the Solo only"}
-          aside={s.tubOnly ? priceLabel(s.tubOnly) : "—"}
-        />
-      </div>
-
-      {/* Hero features */}
-      <div className="grid grid-cols-2 gap-3">
-        {HERO_FEATURES.map(([title, body]) => (
-          <div key={title} className="flex flex-col gap-[6px] rounded-[6px] bg-warm-off-white p-5 max-lg:p-4">
-            <p className="text-h5 text-odin-grey lg:whitespace-nowrap">{title}</p>
-            <p className="text-body text-muted">{body}</p>
-          </div>
-        ))}
+        {/* Only the Solo comes as a tub on its own; Lux and Grande don't offer the option at all. */}
+        {s.tubOnly && (
+          <OptionRow
+            role="radio"
+            indicator="radio"
+            selected={tubOnly}
+            onClick={() => setTubOnly(true)}
+            title="Tub only"
+            note={`Save ${money(s.tubOnly.save)}`}
+            aside={priceLabel(s.tubOnly)}
+          />
+        )}
       </div>
 
       {/* Warranty + add-ons */}
@@ -311,16 +340,16 @@ export function BuyBox() {
         </p>
         {/* Afterpay is named in the line above, so it's not repeated here. */}
         <PaymentMarks tone="muted" omit={["Afterpay"]} />
-        {/* Three columns on desktop; a stacked list on phones, where three columns would be too narrow. */}
-        <div className="flex w-full items-start rounded-[6px] bg-warm-off-white px-2 py-[18px] max-lg:flex-col max-lg:items-stretch max-lg:px-4 max-lg:py-1">
+        {/* Three columns on one line, phones included (smaller type there so the columns fit). */}
+        <div className="flex w-full items-start rounded-[6px] bg-warm-off-white px-2 py-5 max-lg:px-1 max-lg:py-4">
           {USPS.map((u, i) => (
             <div key={u.icon} className="contents">
-              {i > 0 && <div className="h-12 w-px shrink-0 self-center bg-line max-lg:h-px max-lg:w-full" />}
-              <div className="flex min-w-0 flex-1 flex-col items-center gap-[10px] text-center max-lg:flex-row max-lg:gap-3 max-lg:py-3 max-lg:text-left">
-                <UspIcon name={u.icon} />
-                <p className="text-h5 whitespace-nowrap text-odin-grey">
+              {i > 0 && <div className="h-14 w-px shrink-0 self-center bg-line" />}
+              <div className="flex min-w-0 flex-1 flex-col items-center gap-[10px] text-center">
+                <UspIcon name={u.icon} size={34} />
+                <p className="text-h5 text-odin-grey max-lg:text-[13px] max-lg:leading-[1.3]">
                   {u.title[0]}
-                  <br className="max-lg:hidden" /> {u.title[1]}
+                  <br /> {u.title[1]}
                 </p>
               </div>
             </div>

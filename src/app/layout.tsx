@@ -17,9 +17,8 @@ const neueMontreal = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Niseko Ice Bath | ODIN",
-  description:
-    "Push harder. Recover faster. Build resilience where others break. Niseko delivers cold-driven recovery for athletes and high-performers who demand more.",
+  title: { template: "%s | ODIN", default: "ODIN | Saunas and ice baths, built for the home" },
+  description: "Pro-level saunas and ice baths, built for the home.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

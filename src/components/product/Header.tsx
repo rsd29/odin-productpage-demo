@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
 import { Container } from "../ui/Container";
 import { LiquidGlass } from "../ui/LiquidGlass";
@@ -8,8 +9,8 @@ import { MegaMenuPanel } from "./MegaMenu";
 import { MobileMenu } from "./MobileMenu";
 import { MENUS, NAV_LINKS } from "./nav";
 
-/** The 36px campaign bar has left the viewport when the header affixes. */
-const SCROLL_THRESHOLD = 36;
+/** Fallback campaign-bar height; the real one is measured, so the header compacts exactly as the bar leaves. */
+const SCROLL_THRESHOLD = 48;
 const EASE = "duration-150 ease-out motion-reduce:transition-none";
 const SIZE_EASE = "duration-350 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none";
 const CONTROL = "inline-flex min-h-11 items-center justify-center rounded-sm transition-opacity duration-150 ease-out hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current motion-reduce:transition-none";
@@ -18,7 +19,11 @@ const CONTROL = "inline-flex min-h-11 items-center justify-center rounded-sm tra
 const OPEN_DELAY = 150;
 const CLOSE_DELAY = 300;
 
-export function Header() {
+/**
+ * `overlay`: the header starts out transparent, with cream text and icons, over a full-bleed hero (the homepage),
+ * then turns into the usual glass bar once scrolled. Hover / focus / an open menu still bring back solid cream.
+ */
+export function Header({ overlay = false }: { overlay?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const [onDark, setOnDark] = useState(false);
   const [openId, setOpenId] = useState<string | null>(null);
@@ -32,7 +37,8 @@ export function Header() {
 
   useEffect(() => {
     const onScroll = () => {
-      const compact = window.scrollY >= SCROLL_THRESHOLD;
+      const bar = document.querySelector<HTMLElement>("[data-campaign-bar]");
+      const compact = window.scrollY >= (bar?.offsetHeight ?? SCROLL_THRESHOLD);
       setScrolled(compact);
       const probeY = compact ? 22 : 38;
       // Adaptive contrast, like iOS: go light when the glass sits over a dark section.
@@ -103,15 +109,17 @@ export function Header() {
   }, []);
 
   const menuOpen = openId !== null;
-  // Light foreground only while it's clear glass over a dark section; hover/focus/open menu brings solid cream back.
-  const light = scrolled && onDark && !menuOpen;
+  // Transparent over the hero at the top of an overlay page.
+  const clear = overlay && !scrolled && !menuOpen;
+  // Light foreground while it's clear over the hero, or glass over a dark section; hover/focus/open menu brings solid cream back.
+  const light = clear || (scrolled && onDark && !menuOpen);
   const ink = `transition-[color,filter] ${EASE} ${
     light ? "group-hover:text-odin-grey group-focus-within:text-odin-grey" : ""
   }`;
   const iconInk = `transition-[filter] ${EASE} ${
     light ? "brightness-0 invert group-hover:brightness-100 group-hover:invert-0 group-focus-within:brightness-100 group-focus-within:invert-0" : ""
   }`;
-  const solid = !scrolled || menuOpen;
+  const solid = (!scrolled && !overlay) || menuOpen;
 
   return (
     <header
@@ -142,21 +150,21 @@ export function Header() {
       >
         <LiquidGlass
           className={`transition-opacity ${EASE} group-hover:opacity-0 group-focus-within:opacity-0 ${
-            solid ? "opacity-0" : "opacity-100"
+            solid || clear ? "opacity-0" : "opacity-100"
           }`}
         />
         <Container className="relative h-full">
           <nav className="flex h-full items-center" aria-label="Main">
-            <a href="#" aria-label="ODIN home" className={`${CONTROL} shrink-0`}>
+            <Link href="/" aria-label="ODIN home" className={`${CONTROL} shrink-0`}>
               <span
                 className={`block transition-[width] ${SIZE_EASE} ${scrolled ? "w-[84px]" : "w-[119px] max-lg:w-[96px]"}`}
               >
                 <Image src="/brand/odin-logo.svg" alt="ODIN" width={119} height={34} priority className={`h-auto w-full ${iconInk}`} />
               </span>
-            </a>
+            </Link>
             <div className="flex-1" />
             <ul
-              className={`flex items-center gap-9 font-sans text-[14px] font-semibold leading-[1.5] max-lg:hidden ${
+              className={`flex items-center gap-10 font-sans text-[16px] font-semibold leading-[1.5] max-xl:gap-7 max-lg:hidden ${
                 light ? "text-odin-cream" : "text-odin-grey"
               } ${ink}`}
             >
