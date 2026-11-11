@@ -2,7 +2,6 @@ import Image from "next/image";
 import { NISEKO_HREF } from "../product/nav";
 import { SIZES, money, type Pricing } from "../product/data";
 import { CampaignBadge } from "../ui/CampaignBadge";
-import { ArrowLink } from "../ui/ArrowLink";
 import { ButtonLink } from "../ui/Button";
 import { Container } from "../ui/Container";
 import { FramedImage, type Frame } from "../ui/FramedImage";
@@ -60,7 +59,7 @@ const TILES: Tile[] = [
 function PriceLine({ p }: { p: Pricing }) {
   return (
     <div className="flex flex-wrap items-center gap-x-2 gap-y-2 pt-1">
-      <span className="text-price text-odin-grey">
+      <span className="text-h4 text-odin-grey">
         <span className="text-body mr-1 text-muted">From</span>
         {p.price ? money(p.price) : "Price TBC"}
       </span>
@@ -88,7 +87,6 @@ function Card({ t }: { t: Tile }) {
         <PriceLine p={t.pricing} />
         <div className="flex flex-wrap items-center gap-5 pt-[10px]">
           <ButtonLink href={t.href ?? "#"}>{t.cta}</ButtonLink>
-          <ArrowLink href={t.href ?? "#"}>Learn more</ArrowLink>
         </div>
       </div>
     </article>
@@ -97,9 +95,9 @@ function Card({ t }: { t: Tile }) {
 
 export function HeatOrCold() {
   return (
-    <section className="bg-odin-cream pb-14 pt-28 max-lg:pt-14">
+    <section id="range" className="scroll-mt-16 bg-odin-cream py-16 max-lg:py-10">
       <Container className="flex flex-col gap-10 max-lg:gap-5">
-        <h2 className="text-h2 text-odin-grey">Choose your heat. Or your cold.</h2>
+        <h2 className="text-h2 text-odin-grey">Choose your heat or your cold</h2>
         <SwipeRow
           label="Saunas and ice baths"
           gap="gap-6 max-lg:gap-3"

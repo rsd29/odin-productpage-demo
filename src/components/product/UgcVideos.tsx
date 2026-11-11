@@ -13,19 +13,15 @@ const VIDEOS = [
 /** `product` names what the stories are about in the intro line (the Niseko on its page, Glow+ on the homepage). */
 export function UgcVideos({ product = "the Niseko" }: { product?: string }) {
   return (
-    <section data-header-theme="dark" className="bg-odin-grey pb-[77px] pt-[83px] max-lg:pb-14 max-lg:pt-14">
+    <section data-header-theme="dark" className="bg-odin-grey py-16 max-lg:py-10">
       <Container className="flex flex-col gap-12 max-lg:gap-8">
         <div className="flex items-end gap-6 max-lg:flex-col max-lg:items-start max-lg:gap-4">
           <div className="flex min-w-0 flex-1 flex-col gap-4">
-            <h2 className="text-h2 text-odin-cream">Real routines, real recovery.</h2>
+            <h2 className="text-h2 text-odin-cream">Real routines, real recovery</h2>
             <p className="text-body text-muted-on-dark">
               How athletes and everyday recoverers fit {product} into their week.
             </p>
           </div>
-          <a href="#" className="flex shrink-0 items-center gap-2 hover:opacity-80">
-            <span className="text-label-md whitespace-nowrap text-odin-cream">Watch all stories</span>
-            <Image src="/figma/shared/arrow-cream.svg" alt="" width={14} height={14} />
-          </a>
         </div>
         {/* Phones: a swipeable row that bleeds to the screen edge, with dots to show there's more. */}
         <SwipeRow

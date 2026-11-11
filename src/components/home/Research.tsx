@@ -5,7 +5,7 @@ import { SwipeRow } from "../ui/SwipeRow";
 /** Body copy as paragraphs of plain text and `{ b: "…" }` key points, set heavier. */
 type Seg = string | { b: string };
 
-const TILES: { title: string; img: string; body: Seg[][]; muted?: boolean }[] = [
+const TILES: { title: string; img: string; body: Seg[][]; muted?: boolean; focus?: string }[] = [
   {
     title: "Sweat deeper, not hotter",
     img: "/figma/science/tile-1.png",
@@ -32,7 +32,8 @@ const TILES: { title: string; img: string; body: Seg[][]; muted?: boolean }[] = 
   },
   {
     title: "Settle into every detail",
-    img: "/figma/science/tile-4.png",
+    img: "/images/sauna-interior.webp",
+    focus: "55% center",
     // A light photo: dimmed, with a lighter panel, as in the design.
     muted: true,
     body: [["Hemlock timber, soft lighting and built-in speakers."], [{ b: "Set your heat, pick your timer, settle in." }]],
@@ -47,6 +48,7 @@ function Tile({ t, i }: { t: (typeof TILES)[number]; i: number }) {
         alt=""
         fill
         sizes="(min-width: 1024px) 320px, 280px"
+        style={t.focus ? { objectPosition: t.focus } : undefined}
         className={`object-cover ${t.muted ? "opacity-70" : ""}`}
       />
       <div
@@ -72,9 +74,9 @@ function Tile({ t, i }: { t: (typeof TILES)[number]; i: number }) {
 
 export function Research() {
   return (
-    <section data-header-theme="dark" className="bg-odin-grey pb-[81px] pt-[78px] max-lg:py-14">
+    <section data-header-theme="dark" className="bg-odin-grey py-16 max-lg:py-10">
       <Container className="flex flex-col gap-10 max-lg:gap-5">
-        <h2 className="text-h2 text-white">What the research says.</h2>
+        <h2 className="text-h2 text-white">What the research says</h2>
         <SwipeRow
           label="What the research says"
           gap="gap-2"

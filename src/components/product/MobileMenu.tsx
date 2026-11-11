@@ -101,7 +101,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
           const m = MENUS.find((menu) => menu.id === l.id);
           if (!m)
             return (
-              <a key={l.id} href={l.href ?? "#"} className="flex items-center gap-2 border-b border-line py-4">
+              <a key={l.id} href={l.href ?? "#"} onClick={onClose} className="flex items-center gap-2 border-b border-line py-4">
                 <span className="text-h4 flex-1 text-odin-grey">{l.label}</span>
                 <Arrow className="text-odin-grey" />
               </a>

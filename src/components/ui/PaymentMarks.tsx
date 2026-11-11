@@ -14,7 +14,7 @@ const toneBg = (tone: Tone) => (tone === "muted" ? "bg-muted" : "bg-muted-on-dar
 export function PaymentMarks({ tone, omit = [] }: { tone: Tone; /** Labels to leave out, e.g. ["Afterpay"]. */ omit?: string[] }) {
   const bg = toneBg(tone);
   return (
-    <ul className="flex items-center gap-2" aria-label="Accepted payment methods">
+    <ul className="flex max-w-full flex-wrap items-center gap-2" aria-label="Accepted payment methods">
       {marks.filter((m) => !omit.includes(m.label)).map((m) => (
         <li
           key={m.src}

@@ -20,8 +20,11 @@ const RED_CEDAR = Array.from(
   (_, i) => `/products/niseko/${i + 1}.webp`,
 );
 const BLACK = Array.from({ length: 4 }, (_, i) => `/products/niseko/black-${i + 1}.webp`);
-/** Photos per finish: choosing a colour swaps the gallery and its thumbnails. */
-const GALLERY: Record<Finish, string[]> = { "Red Cedar": RED_CEDAR, Black: BLACK };
+/** Keep the shared detail and information images when switching to the black finish. */
+const GALLERY: Record<Finish, string[]> = {
+  "Red Cedar": RED_CEDAR,
+  Black: [...BLACK, ...RED_CEDAR.slice(3, 9)],
+};
 /** Main image width (712 column − 88 thumbs − 12 gap). */
 const MAIN = 612;
 /** Per-image framing (by path → focus/zoom); unlisted images are centred square photos shown whole. */
@@ -124,7 +127,7 @@ export function Gallery() {
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [measure]);
+  }, [measure, finish]);
 
   // Desktop rail: its own Lenis instance, so the wheel glides with the same lerp as the page instead of
   // stepping natively. At either end it overscrolls, handing the wheel back to the page.

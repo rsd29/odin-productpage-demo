@@ -4,9 +4,9 @@ import { Container } from "../ui/Container";
 
 export function TalkToUs() {
   return (
-    <section className="bg-white py-28 max-lg:py-14">
+    <section id="contact" className="scroll-mt-16 bg-white py-16 max-lg:py-10">
       <Container className="flex items-start gap-[84px] max-xl:gap-12 max-lg:flex-col max-lg:gap-5">
-        <h2 className="text-h3 whitespace-nowrap text-odin-grey">Talk to a real person.</h2>
+        <h2 className="text-h3 whitespace-nowrap text-odin-grey">Talk to a real person</h2>
         <p className="text-body min-w-0 flex-1 text-olive-grey">
           Not sure which size fits, or what power you need?
           <br />

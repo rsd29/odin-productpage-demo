@@ -168,8 +168,8 @@ const DETAILS: Detail[] = [
     n: "02",
     title: "Canadian red cedar",
     at: [0.49, 0.4],
-    focus: `${IMG}/5.webp`,
-    frame: { x: 0.55, y: 0.45, zoom: 1.25 },
+    focus: "/images/cedar-detail.webp",
+    frame: { x: 0.5, y: 0.5 },
     body: "Natural, sustainably sourced timber that’s naturally resistant to moisture and decay.",
   },
   {
@@ -228,11 +228,11 @@ export function EveryDetail() {
       id="details"
       onKeyDown={onKeyDown}
       // Phones: natural height, with the panels stacked.
-      className="flex h-svh max-h-[1140px] min-h-[780px] scroll-mt-[45px] bg-white py-20 max-lg:h-auto max-lg:max-h-none max-lg:min-h-0 max-lg:py-14"
+      className="flex h-[85svh] max-h-[960px] min-h-[680px] scroll-mt-[45px] bg-white py-14 max-lg:h-auto max-lg:max-h-none max-lg:min-h-0 max-lg:py-10"
     >
       <Container className="flex min-h-0 flex-col gap-8 max-lg:gap-6">
         <div className="flex flex-col gap-2">
-          <h2 className="text-h2 text-odin-grey">Every detail, up close.</h2>
+          <h2 className="text-h2 text-odin-grey">Every detail, up close</h2>
           <p className="text-body text-muted lg:hidden">Tap a number to see each detail up close.</p>
         </div>
 

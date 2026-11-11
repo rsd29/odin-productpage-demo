@@ -22,8 +22,8 @@ export default function HomePage() {
       <Header overlay />
       <main>
         <HomeHero />
-        <UgcVideos product="Glow+" />
         <HeatOrCold />
+        <UgcVideos product="Glow+" />
         <OdinPromise />
         <ContrastTherapy />
         <Research />

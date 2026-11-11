@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { ArrowLink } from "../ui/ArrowLink";
+import { NISEKO_HREF } from "../product/nav";
 import { ButtonLink } from "../ui/Button";
 import { Container } from "../ui/Container";
 
@@ -11,7 +11,7 @@ import { Container } from "../ui/Container";
  * here; until then the poster frame shows on its own.
  */
 const HERO_VIDEO: string | undefined = undefined;
-const POSTER = "/figma/home/hero-poster.jpg";
+const POSTER = "/images/home-hero.webp";
 
 const CONTROL =
   "flex size-11 cursor-pointer items-center justify-center rounded-full border border-white/40 bg-white/[0.16] backdrop-blur-[6px] transition-colors hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
@@ -40,9 +40,9 @@ export function HomeHero() {
       data-header-theme="dark"
       // Fills the screen below the promo bar, sliding up under the transparent header (hence the negative
       // margin, equal to the header's height), so the headline and buttons are always in view.
-      className="relative isolate -mt-[75px] flex h-[calc(100svh-48px)] max-h-[1000px] min-h-[600px] flex-col justify-end overflow-hidden bg-olive-grey pb-[88px] max-lg:-mt-[60px] max-lg:h-[calc(100svh-44px)] max-lg:min-h-[560px] max-lg:pb-12"
+      className="relative isolate -mt-[75px] flex h-[calc(100svh-56px)] max-h-[1000px] min-h-[600px] flex-col justify-end overflow-hidden bg-olive-grey pb-16 max-lg:-mt-[60px] max-lg:h-[calc(100svh-48px)] max-lg:min-h-[560px] max-lg:pb-10"
     >
-      <Image src={POSTER} alt="" fill priority sizes="100vw" className="-z-20 object-cover" />
+      <Image src={POSTER} alt="" fill priority sizes="(max-width: 1023px) 1800px, 100vw" className="-z-20 object-cover max-lg:object-[43%_center]" />
       {HERO_VIDEO && (
         <video
           ref={video}
@@ -62,18 +62,17 @@ export function HomeHero() {
       <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-[rgba(33,33,33,0.45)] to-transparent" />
 
       <Container className="relative">
-        {/* Desktop: the copy sits inset from the grid, as in the design. */}
-        <div className="flex max-w-[720px] flex-col items-start gap-7 lg:px-14 max-lg:gap-5">
+        <div className="flex max-w-[720px] flex-col items-start gap-7 max-lg:gap-5">
           <h1 className="text-display animate-title-in text-odin-cream motion-reduce:animate-none">
-            Forged in fire. <br className="lg:hidden" />
-            An Icon Reborn.
+            Forged in fire <br className="lg:hidden" />
+            An Icon Reborn
           </h1>
-          <p className="text-h3 text-white max-lg:text-body">Pro-level saunas and ice baths, built for the home.</p>
+          <p className="text-h3 text-white max-lg:text-body">Pro-level saunas and ice baths, built for the home</p>
           <div className="flex flex-wrap items-center gap-6 pt-2">
-            <ButtonLink href="#" variant="inverse">
+            <ButtonLink href="#range" variant="inverse">
               Shop saunas
             </ButtonLink>
-            <ArrowLink tone="white">Shop ice baths</ArrowLink>
+            <ButtonLink href={NISEKO_HREF} variant="inverse">Shop ice baths</ButtonLink>
           </div>
         </div>
         <div className="absolute bottom-[-4px] right-20 flex gap-3 max-lg:hidden">

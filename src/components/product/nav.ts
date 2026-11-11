@@ -52,11 +52,10 @@ const NISEKO: MenuProduct = {
 
 /** Top-level header links. Only the ones with an entry in MENUS open a mega menu; the rest are plain links. */
 export const NAV_LINKS: { id: string; label: string; href?: string }[] = [
-  { id: "saunas", label: "Saunas" },
+  { id: "saunas", label: "Saunas", href: "/#range" },
   { id: "ice-baths", label: "Ice baths" },
-  { id: "bundles", label: "Bundles" },
-  { id: "recovery", label: "Recovery" },
-  { id: "learn", label: "Learn" },
+  { id: "about", label: "About us", href: "/#founder" },
+  { id: "contact", label: "Contact", href: "/#contact" },
 ];
 
 export const MENUS: Menu[] = [
@@ -85,7 +84,7 @@ export const MENUS: Menu[] = [
     ],
     all: {
       eyebrow: "ICE BATHS",
-      title: "Cold on demand, from 3°C.",
+      title: "Cold on demand, from 3°C",
       links: [{ label: "Shop all ice baths" }, { label: "Compare ice baths" }, { label: "Filters and accessories" }],
     },
   },

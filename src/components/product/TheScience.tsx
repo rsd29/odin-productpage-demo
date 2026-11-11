@@ -16,6 +16,8 @@ const TILES: {
   title: string;
   body: Seg[][];
   img: string;
+  ratio?: number;
+  frame?: Frame;
 }[] = [
   {
     tag: "Advanced filtration",
@@ -60,13 +62,15 @@ const TILES: {
       ],
       [{ b: "So you recover hard, all-year-round." }],
     ],
-    img: "/products/niseko/why-3.webp",
+    img: "/images/cedar-detail.webp",
+    ratio: 1,
+    frame: { x: 0.5, y: 0.47 },
   },
 ];
 
 /** Fixed so the photos line up across tiles whatever the copy length. */
-const PANEL = 252;
-/** One crop for every photo (9:16 portraits shot the same way), so all three sit identically. */
+const PANEL = 240;
+/** Default framing for the original portrait photos; material details supply their own. */
 const FRAME: Frame = { x: 0.5, y: 0.43 };
 
 export function TheScience() {
@@ -74,11 +78,11 @@ export function TheScience() {
   return (
     <section
       data-header-theme="dark"
-      className="relative isolate overflow-hidden bg-black pb-16 pt-16 max-lg:py-14"
+      className="relative isolate overflow-hidden bg-black py-14 max-lg:py-10"
     >
       <Container className="flex flex-col gap-10 max-lg:gap-8">
         <div className="flex flex-col gap-4">
-          <h2 className="text-h2 text-white">Why choose the Niseko Ice Bath.</h2>
+          <h2 className="text-h2 text-white">Why choose the Niseko Ice Bath</h2>
           <p className="text-body max-w-[720px] text-muted-on-dark">
             Push harder. Recover faster. Build resilience where others break. Niseko delivers cold-driven
             recovery for athletes and high-performers who demand more.
@@ -102,9 +106,9 @@ export function TheScience() {
                   <Image src={t.img} alt="" fill sizes="120px" className="object-cover" />
                 </div>
               </div>
-              <article className="relative flex h-[620px] w-full flex-col justify-end overflow-hidden rounded-[8px] bg-black max-lg:h-[500px]">
+              <article className="relative flex h-[540px] w-full flex-col justify-end overflow-hidden rounded-[8px] bg-black max-lg:h-[460px]">
                 {/* The photo fills the whole tile; the text panel sits over its lower part as frosted glass */}
-                <FramedImage src={t.img} alt="" sizes="480px" ratio={1080 / 1920} {...FRAME} />
+                <FramedImage src={t.img} alt="" sizes="480px" ratio={t.ratio ?? 1080 / 1920} {...(t.frame ?? FRAME)} />
                 <div
                   // Fixed height on wide screens so the photos line up; narrower tiles let the panel grow to fit the copy.
                   className="relative flex flex-col gap-3 border-t border-white/10 bg-[rgb(20_20_20/0.45)] p-6 text-white backdrop-blur-[16px] backdrop-saturate-[1.2] max-xl:h-auto! max-lg:p-5"

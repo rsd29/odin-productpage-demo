@@ -205,8 +205,8 @@ export function TechnicalDetails() {
               aria-controls={`tech-${item.id}`}
               className="flex w-full cursor-pointer items-center gap-3 text-left"
             >
-              <Image src={item.icon} alt="" width={18} height={18} />
-              <span className="text-h5 flex-1 text-odin-grey">{item.title}</span>
+              <Image src={item.icon} alt="" width={22} height={22} className="size-[22px] shrink-0 object-contain" />
+              <span className="flex-1 font-display text-[22px] font-medium leading-[1.3] text-odin-grey max-lg:text-[20px]">{item.title}</span>
               {/* Same plus → minus as the FAQ: the vertical bar rotates and fades out. */}
               <svg
                 aria-hidden="true"

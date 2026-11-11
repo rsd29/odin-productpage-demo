@@ -22,7 +22,7 @@ export function PriceLine({ p }: { p: MenuProduct }) {
     );
   return (
     <span className="flex flex-wrap items-center gap-2">
-      <span className="text-price text-odin-grey">
+      <span className="text-h4 text-odin-grey">
         {p.from && <span className="text-body mr-1 text-muted">From</span>}
         {p.price}
       </span>

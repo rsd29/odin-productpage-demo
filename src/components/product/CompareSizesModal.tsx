@@ -99,7 +99,7 @@ export function CompareSizesModal() {
               </div>
               <p className="text-h3 text-odin-grey">Niseko {SIZES[id].name}</p>
               <p className="flex flex-wrap items-baseline gap-x-2">
-                <span className="text-price text-odin-grey">{priceLabel(SIZES[id].withChiller)}</span>
+                <span className="text-h4 text-odin-grey">{priceLabel(SIZES[id].withChiller)}</span>
                 {SIZES[id].withChiller.compareAt && (
                   <s className="text-price text-muted">{money(SIZES[id].withChiller.compareAt)}</s>
                 )}
@@ -127,7 +127,7 @@ export function CompareSizesModal() {
             <Button
               key={id}
               variant={size === id ? "primary" : "secondary"}
-              className="min-w-0 flex-1 px-5 py-[10px] max-lg:px-2 max-lg:py-2 max-lg:text-[13px]"
+              className="min-h-11 min-w-0 flex-1 px-4 py-2 max-lg:px-1 max-lg:py-2 max-lg:text-[12px]"
               onClick={() => choose(id)}
             >
               Choose {SIZES[id].name}

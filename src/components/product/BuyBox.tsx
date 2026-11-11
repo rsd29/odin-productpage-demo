@@ -26,11 +26,11 @@ import { FinishSelector } from "./FinishSelector";
 import { TechnicalDetails } from "./TechnicalDetails";
 
 /** Key features above the size picker. The chiller ones drop out when "Tub only" is chosen. */
-const HERO_FEATURES: { icon: FeatureIconName; title: string; body: string; chiller?: boolean }[] = [
-  { icon: "cedar", title: "Canadian red cedar", body: "Certified sustainable" },
-  { icon: "steel", title: "Marine-grade 316 steel", body: "Premium stainless steel tub" },
-  { icon: "chiller", title: "Powerful 1HP chiller", body: "Cools to 3°C, heats to 35°C", chiller: true },
-  { icon: "flow", title: "23 L/min high-flow pump", body: "With ozone filtration", chiller: true },
+const HERO_FEATURES: { icon: FeatureIconName; title: string; body: string; colour: string; chiller?: boolean }[] = [
+  { icon: "cedar", colour: "text-[#57734f]", title: "Canadian red cedar", body: "Certified sustainable" },
+  { icon: "steel", colour: "text-[#637585]", title: "Marine-grade 316 steel", body: "Premium stainless steel tub" },
+  { icon: "chiller", colour: "text-[#397e9f]", title: "Powerful 1HP chiller", body: "Cools to 3°C, heats to 35°C", chiller: true },
+  { icon: "flow", colour: "text-[#397f7a]", title: "23 L/min high-flow pump", body: "With ozone filtration", chiller: true },
 ];
 
 // Each title is set on two lines so the three columns stay visually even.
@@ -81,6 +81,7 @@ function OptionRow({
   note,
   aside,
   role,
+  compact = false,
 }: {
   selected: boolean;
   disabled?: boolean;
@@ -90,6 +91,7 @@ function OptionRow({
   note?: string;
   aside: ReactNode;
   role: "radio" | "checkbox";
+  compact?: boolean;
 }) {
   return (
     <button
@@ -98,16 +100,16 @@ function OptionRow({
       aria-checked={selected}
       disabled={disabled}
       onClick={onClick}
-      className={`flex w-full items-center gap-3 rounded-[6px] bg-white px-4 py-[14px] text-left ${
+      className={`flex w-full items-center gap-3 rounded-[6px] bg-white px-4 py-3 text-left ${compact ? "h-full flex-wrap content-start" : ""} ${
         selected ? "border-[1.5px] border-odin-grey" : "border border-line"
       } ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:border-muted"}`}
     >
       <Indicator type={indicator} on={selected} />
       <span className="flex min-w-0 flex-1 flex-col gap-[2px]">
-        <span className="text-h5 text-odin-grey">{title}</span>
+        <span className={`${compact ? "font-display text-[15px] font-medium leading-snug" : "text-h5"} text-odin-grey`}>{title}</span>
         {note && <span className="text-body text-muted">{note}</span>}
       </span>
-      <span className="text-price whitespace-nowrap text-odin-grey">{aside}</span>
+      <span className={`text-price whitespace-nowrap text-odin-grey ${compact ? "w-full pl-7" : ""}`}>{aside}</span>
     </button>
   );
 }
@@ -133,14 +135,11 @@ function SizeCard({ id }: { id: SizeId }) {
         <span className="text-price whitespace-nowrap text-odin-grey">{priceLabel(p)}</span>
         <span className="text-price whitespace-nowrap text-muted max-lg:text-[13px]">Save {money(p.save)}</span>
       </span>
-      {/* Full-bleed to the card edges; each cut-out is cropped in around the tub so it fills the frame. */}
+      {/* Scale the normalised cut-outs by length relative to Grande, on a common baseline. */}
       <span className="relative -mx-[18px] -mb-4 mt-2 h-[145px] w-[calc(100%+36px)] shrink-0 overflow-hidden max-lg:-mx-3 max-lg:-mb-3 max-lg:h-[90px] max-lg:w-[calc(100%+24px)]">
-        <FramedImage
-          src={src}
-          alt={`Niseko ${s.name}`}
-          sizes="320px"
-          {...VARIANT_FRAME[src]}
-        />
+        <span className="absolute inset-0 origin-bottom" style={{ transform: `scale(${s.length / SIZES.grande.length})` }}>
+          <FramedImage src={src} alt={`Niseko ${s.name}`} sizes="320px" {...VARIANT_FRAME[src]} />
+        </span>
       </span>
     </button>
   );
@@ -157,7 +156,7 @@ export function BuyBox() {
   const addonTotal = ADDONS.filter((a) => addons.has(a.id)).reduce((sum, a) => sum + a.price, 0);
 
   return (
-    <div className="flex min-w-0 flex-1 flex-col gap-[22px]">
+    <div className="flex min-w-0 flex-1 flex-col gap-[18px]">
       <h1 className="text-display text-odin-grey">{PRODUCT_NAME}</h1>
 
       <p className="text-body text-muted">
@@ -169,7 +168,7 @@ export function BuyBox() {
       <div className="flex flex-col gap-[6px]">
         <div className="flex flex-wrap items-center gap-3">
           <span className="text-h2 text-odin-grey">{priceLabel(p)}</span>
-          {p.compareAt && <s className="text-h2 text-muted decoration-[1.5px]">{money(p.compareAt)}</s>}
+          {p.compareAt && <s className="text-h4 text-muted decoration-[1.5px]">{money(p.compareAt)}</s>}
           <CampaignBadge
             campaign={`Save ${money(p.save)}`}
             discount={p.discountPct ? `−${p.discountPct}%` : undefined}
@@ -186,10 +185,11 @@ export function BuyBox() {
 
       {/* Phones: buy straight from the price, rather than scrolling past every option to reach the cart. */}
       <Button
-        className="h-12 w-full py-0 lg:hidden"
-        aria-label={`Add to Cart: ${PRODUCT_NAME}, ${variantName(s, tubOnly, finish)}`}
+        className="h-14 w-full justify-between! gap-3 px-5 py-0 lg:hidden"
+        aria-label={`Add to Cart: ${PRODUCT_NAME}, ${variantName(s, tubOnly, finish)}${p.price ? `, ${money(p.price + addonTotal)}` : ""}`}
       >
-        Add to Cart
+        <span>Add to Cart</span>
+        {p.price && <span className="font-display text-[22px] font-medium tabular-nums">{money(p.price + addonTotal)}</span>}
       </Button>
 
       {/* Key features (the chiller ones drop out for "Tub only"). */}
@@ -197,8 +197,8 @@ export function BuyBox() {
       <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3">
         {HERO_FEATURES.filter((f) => !(tubOnly && f.chiller)).map((f) => (
           // Compact type so every title and description sits on one line, keeping the four boxes even.
-          <div key={f.title} className="flex items-center gap-3 rounded-[6px] bg-warm-off-white px-4 py-[14px]">
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white text-odin-grey">
+          <div key={f.title} className="flex items-center gap-3 rounded-[6px] bg-warm-off-white px-4 py-3">
+            <span className={`flex size-9 shrink-0 items-center justify-center rounded-full bg-white ${f.colour}`}>
               <FeatureIcon name={f.icon} size={20} />
             </span>
             <span className="flex min-w-0 flex-col gap-[2px]">
@@ -260,13 +260,7 @@ export function BuyBox() {
 
       {/* Warranty + add-ons */}
       <div className="flex flex-col gap-[10px]">
-        <div className="flex items-center">
-          <h2 className="text-h5 text-odin-grey">Protect your purchase</h2>
-          <span className="flex-1" />
-          <a href="#" className="text-body text-muted underline">
-            What&rsquo;s covered
-          </a>
-        </div>
+        <h2 className="text-h5 text-odin-grey">Protect your purchase</h2>
         <OptionRow
           role="checkbox"
           indicator="radio"
@@ -275,19 +269,22 @@ export function BuyBox() {
           note="Included with every Niseko"
           aside="Included"
         />
-        {ADDONS.filter((a) => a.id !== "filter").map((a) => (
-          <OptionRow
-            key={a.id}
-            role="checkbox"
-            indicator="check"
-            selected={addons.has(a.id)}
-            disabled={a.needsChiller && tubOnly}
-            onClick={() => toggleAddon(a.id)}
-            title={a.name}
-            note={a.needsChiller && tubOnly ? "Requires the 1HP chiller" : undefined}
-            aside={money(a.price)}
-          />
-        ))}
+        <div className="grid grid-cols-2 gap-3 max-lg:gap-2">
+          {ADDONS.filter((a) => a.id !== "filter").map((a) => (
+            <OptionRow
+              key={a.id}
+              compact
+              role="checkbox"
+              indicator="check"
+              selected={addons.has(a.id)}
+              disabled={a.needsChiller && tubOnly}
+              onClick={() => toggleAddon(a.id)}
+              title={a.name}
+              note={a.needsChiller && tubOnly ? "Requires the 1HP chiller" : undefined}
+              aside={money(a.price)}
+            />
+          ))}
+        </div>
       </div>
 
       <div className="flex flex-col gap-[10px]">
@@ -328,7 +325,7 @@ export function BuyBox() {
           >
             <span className="font-display text-[16px] font-medium leading-none">Add to Cart</span>
             {p.price && (
-              <span className="border-l border-odin-cream/20 pl-5 font-display text-[15px] font-medium leading-5 tabular-nums text-odin-cream/75">
+              <span className="border-l border-odin-cream/30 pl-5 font-display text-[24px] font-medium leading-none tabular-nums text-odin-cream">
                 {money(p.price + addonTotal)}
               </span>
             )}
@@ -341,12 +338,12 @@ export function BuyBox() {
         {/* Afterpay is named in the line above, so it's not repeated here. */}
         <PaymentMarks tone="muted" omit={["Afterpay"]} />
         {/* Three columns on one line, phones included (smaller type there so the columns fit). */}
-        <div className="flex w-full items-start rounded-[6px] bg-warm-off-white px-2 py-5 max-lg:px-1 max-lg:py-4">
+        <div className="flex w-full items-start rounded-[6px] bg-warm-off-white px-2 py-4 max-lg:px-1 max-lg:py-3">
           {USPS.map((u, i) => (
             <div key={u.icon} className="contents">
               {i > 0 && <div className="h-14 w-px shrink-0 self-center bg-line" />}
-              <div className="flex min-w-0 flex-1 flex-col items-center gap-[10px] text-center">
-                <UspIcon name={u.icon} size={34} />
+              <div className="flex min-w-0 flex-1 flex-col items-center gap-1.5 text-center">
+                <UspIcon name={u.icon} size={30} />
                 <p className="text-h5 text-odin-grey max-lg:text-[13px] max-lg:leading-[1.3]">
                   {u.title[0]}
                   <br /> {u.title[1]}

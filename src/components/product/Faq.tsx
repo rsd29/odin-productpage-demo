@@ -6,7 +6,7 @@ import { Container } from "../ui/Container";
 
 /** Prose answer: roomy line spacing and paragraph gaps at a readable measure. */
 const Prose = ({ children }: { children: ReactNode }) => (
-  <div className="flex max-w-[720px] flex-col gap-4 font-sans text-[15px] font-light leading-[1.7] text-olive-grey">{children}</div>
+  <div className="flex w-full flex-col gap-4 pr-9 font-sans text-[15px] font-light leading-[1.7] text-olive-grey max-lg:pr-0">{children}</div>
 );
 /** The key point of an answer, set heavier and darker so it can be skimmed. (Turns white in the open panel.) */
 const B = ({ children }: { children: ReactNode }) => <strong className="font-medium text-odin-grey">{children}</strong>;
@@ -137,10 +137,10 @@ export function Faq() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section className="bg-white pb-20 pt-[81px] max-lg:pb-14 max-lg:pt-14">
+    <section className="bg-white py-16 max-lg:py-10">
       <Container className="flex flex-col gap-5">
         <div className="flex flex-col gap-[14px]">
-          <h2 className="text-h2 text-odin-grey max-lg:text-[22px]">Niseko Ice Bath FAQs</h2>
+          <h2 className="text-h2 text-odin-grey">Niseko Ice Bath FAQs</h2>
           <p className="text-body text-muted">Your path to peak performance starts here.</p>
         </div>
         <a href="#" className="flex items-center gap-2 self-start hover:opacity-80">
@@ -172,7 +172,7 @@ export function Faq() {
                   aria-controls={`faq-${i}`}
                   className="flex w-full cursor-pointer items-center gap-4 text-left"
                 >
-                  <span className="text-h4 min-w-0 flex-1 text-odin-grey max-lg:text-[16px]">{item.q}</span>
+                  <span className="text-h4 min-w-0 flex-1 text-odin-grey">{item.q}</span>
                   <svg
                     aria-hidden="true"
                     width="20"

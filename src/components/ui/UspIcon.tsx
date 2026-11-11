@@ -17,11 +17,10 @@ const PATHS = {
   ),
   concierge: (
     <>
-      <path d="M12 6.25v2" />
-      <path d="M10.5 6.25h3" />
-      <path d="M5.25 16.5a6.75 6.75 0 0 1 13.5 0" />
-      <path d="M3.5 16.5h17" />
-      <path d="M5 19.25h14" />
+      <path d="M4.5 13v-2a7.5 7.5 0 0 1 15 0v2" />
+      <rect x="3.5" y="11" width="4" height="6" rx="1.5" />
+      <rect x="16.5" y="11" width="4" height="6" rx="1.5" />
+      <path d="M18.5 17v1a2.5 2.5 0 0 1-2.5 2.5h-4" />
     </>
   ),
 } as const;
@@ -36,7 +35,7 @@ export function UspIcon({ name, size = 26 }: { name: UspIconName; size?: number 
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.25"
+      strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
       className="shrink-0 text-odin-grey"

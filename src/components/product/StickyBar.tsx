@@ -4,20 +4,21 @@ import { useLenis } from "lenis/react";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/Button";
 import { CampaignBadge } from "../ui/CampaignBadge";
-import { PRODUCT_NAME, SIZES, money, priceLabel, pricingFor, variantName } from "./data";
+import { ADDONS, PRODUCT_NAME, SIZES, money, priceLabel, pricingFor, variantName } from "./data";
 import { useProduct } from "./ProductContext";
 
 /** Bar geometry — exported so pinned layouts (e.g. the gallery) can leave room for it. */
-export const STICKY_BAR = { height: 52, bottom: 16 };
+export const STICKY_BAR = { height: 68, bottom: 16 };
 const EASE = "duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none";
 
 /** Floating buy bar, shown after the main CTA and hidden when its bottom edge reaches the footer. */
 export function StickyBar() {
-  const { size, finish, tubOnly, ctaEl, stickyBarVisible: visible, setStickyBarVisible: setVisible } = useProduct();
+  const { size, finish, tubOnly, addons, ctaEl, stickyBarVisible: visible, setStickyBarVisible: setVisible } = useProduct();
   const lenis = useLenis();
   const [onDark, setOnDark] = useState(false);
   const s = SIZES[size];
   const p = pricingFor(s, tubOnly);
+  const addonTotal = ADDONS.filter((a) => addons.has(a.id)).reduce((sum, a) => sum + a.price, 0);
 
   useEffect(() => {
     if (!ctaEl) return;
@@ -82,7 +83,7 @@ export function StickyBar() {
       style={{ bottom: STICKY_BAR.bottom }}
     >
       <div
-        className={`relative flex w-[760px] max-w-full items-center gap-3 overflow-hidden rounded-full py-[6px] pl-6 pr-[6px] shadow-[0_12px_32px_rgba(0,0,0,0.25)] transition-colors max-lg:pl-5 ${EASE} ${fill}`}
+        className={`relative flex w-[760px] max-w-full items-center gap-3 overflow-hidden rounded-full py-2.5 pl-6 pr-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.25)] transition-colors max-lg:pl-5 ${EASE} ${fill}`}
         style={{ height: STICKY_BAR.height }}
       >
 
@@ -94,8 +95,8 @@ export function StickyBar() {
             {variantName(s, tubOnly, finish)}
           </span>
         </p>
-        <span className={`text-price relative whitespace-nowrap transition-colors ${EASE} ${ink}`}>
-          {priceLabel(p)}
+        <span className={`relative whitespace-nowrap font-display text-[24px] font-medium tabular-nums transition-colors max-lg:text-[22px] ${EASE} ${ink}`}>
+          {p.price ? money(p.price + addonTotal) : priceLabel(p)}
         </span>
         <div className="relative max-lg:hidden">
           <CampaignBadge
@@ -105,7 +106,7 @@ export function StickyBar() {
         </div>
         <Button
           variant={onDark ? "primary" : "inverse"}
-          className="relative h-10 shrink-0 px-6 py-0 font-display! text-[15px]! font-medium! max-lg:px-5"
+          className="relative h-12 shrink-0 px-6 py-0 font-display! text-[15px]! font-medium! max-lg:px-4"
           onClick={() => lenis?.scrollTo(0)}
         >
           Add to Cart

@@ -37,8 +37,8 @@ const CARDS = [
 /** Figma "USP card": icon and index, a big stat, title and body, then a link pinned to the bottom. */
 function UspCard({ c, i }: { c: (typeof CARDS)[number]; i: number }) {
   return (
-    <article className="flex h-[480px] w-full flex-col rounded-[6px] border border-white/[0.08] bg-ink-raised p-8 max-lg:h-[460px] max-lg:p-7">
-      <div className="flex items-center justify-between pb-14">
+    <article className="flex min-h-[420px] w-full flex-col rounded-[6px] border border-white/[0.08] bg-ink-raised p-6 max-lg:min-h-[400px]">
+      <div className="flex items-center justify-between pb-8">
         <span className="flex size-[52px] items-center justify-center rounded-full bg-odin-cream">
           <Image src={`/figma/home/usp-${c.icon}.svg`} alt="" width={24} height={24} />
         </span>
@@ -60,9 +60,9 @@ function UspCard({ c, i }: { c: (typeof CARDS)[number]; i: number }) {
 
 export function OdinPromise() {
   return (
-    <section data-header-theme="dark" className="bg-ink py-28 max-lg:py-14">
-      <Container className="flex flex-col gap-14 max-lg:gap-6">
-        <h2 className="text-h2 text-white">Buy with complete confidence.</h2>
+    <section data-header-theme="dark" className="bg-ink py-16 max-lg:py-10">
+      <Container className="flex flex-col gap-10 max-lg:gap-6">
+        <h2 className="text-h2 text-white">Why choose us</h2>
         <SwipeRow
           label="The ODIN promise"
           gap="gap-4 max-lg:gap-3"

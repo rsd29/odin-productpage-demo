@@ -25,7 +25,7 @@ const heightFor = (w: number, h: number) => Math.min(96, Math.round(Math.sqrt(AR
  */
 export function TrustBar() {
   return (
-    <section className="overflow-hidden bg-odin-cream pb-20 max-lg:pb-14">
+    <section className="overflow-hidden bg-warm-off-white py-14 max-lg:py-10">
       <Container className="pb-10 max-lg:pb-8">
         <h2 className="text-h2 text-odin-grey">Trusted by elite Australian athletes</h2>
       </Container>
@@ -37,8 +37,8 @@ export function TrustBar() {
           {[0, 1].map((half) => (
             <ul key={half} aria-hidden={half === 1} aria-label={half === 0 ? "Partner sports" : undefined} className="flex shrink-0 items-center">
               {[...LOGOS, ...LOGOS].map(([file, label, w, h], i) => (
-                // --s scales the whole row down on phones.
-                <li key={`${file}-${i}`} className="flex h-24 shrink-0 items-center px-12 [--s:1] max-lg:h-11 max-lg:px-5 max-lg:[--s:0.45]">
+                // Keep the coloured marks large enough to recognise on phones.
+                <li key={`${file}-${i}`} className="flex h-24 shrink-0 items-center px-12 [--s:1] max-lg:h-20 max-lg:px-7 max-lg:[--s:0.75]">
                   <Image
                     src={`/brand/athletes/${file}`}
                     // Only the first copy is announced.
@@ -46,7 +46,7 @@ export function TrustBar() {
                     width={w}
                     height={h}
                     style={{ height: `calc(${heightFor(w, h)}px * var(--s))` }}
-                    className="w-auto object-contain opacity-85 brightness-[0.55] grayscale"
+                    className="w-auto object-contain"
                   />
                 </li>
               ))}
