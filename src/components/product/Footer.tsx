@@ -89,7 +89,7 @@ export function Footer() {
             </form>
             <p className="text-body whitespace-pre-wrap text-muted-on-dark">
               {"Talk to a specialist  "}
-              <a href="tel:1300888669">1300 888 669</a>, Mon–Sat
+              <a href="tel:1300423428">1300 423 428</a>, Mon–Sat
             </p>
             <ul className="flex items-center gap-2" aria-label="Follow ODIN">
               {SOCIALS.map((so) => (

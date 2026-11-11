@@ -1,6 +1,6 @@
 import { Container } from "../ui/Container";
 
-const PHONE = { href: "tel:1300888669", label: "1300 888 669" };
+const PHONE = { href: "tel:1300423428", label: "1300 423 428" };
 
 function PhoneIcon({ className = "" }: { className?: string }) {
   return (
@@ -57,10 +57,6 @@ export function TalkToUs() {
           <p className="text-body text-muted-on-dark">
             Speak to someone who knows the gear inside out, from sizing to setup day.
           </p>
-          <span className="text-label-md inline-flex items-center justify-center gap-[10px] rounded-full bg-odin-cream px-7 py-[13px] text-odin-grey transition-colors group-hover:bg-white">
-            <PhoneIcon />
-            Call now
-          </span>
         </a>
       </Container>
     </section>

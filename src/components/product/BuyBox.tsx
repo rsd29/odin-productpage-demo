@@ -302,11 +302,11 @@ export function BuyBox() {
         <div className="flex min-w-0 flex-1 flex-col gap-[2px]">
           <p className="text-label-md whitespace-nowrap text-odin-grey">Now available. Order today!</p>
           <p className="text-body text-muted">Fast delivery. Delivery times TBC</p>
-          <a href="tel:1300888669" className="text-body mt-1 self-start text-[13px] text-odin-grey underline lg:hidden">
+          <a href="tel:1300423428" className="text-body mt-1 self-start text-[13px] text-odin-grey underline lg:hidden">
             Request a callback
           </a>
         </div>
-        <a href="tel:1300888669" className="text-body whitespace-nowrap text-odin-grey hover:underline max-lg:hidden">
+        <a href="tel:1300423428" className="text-body whitespace-nowrap text-odin-grey hover:underline max-lg:hidden">
           Request a callback
         </a>
       </div>

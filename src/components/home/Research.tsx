@@ -1,13 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Container } from "../ui/Container";
 import { SwipeRow } from "../ui/SwipeRow";
 
 /** Body copy as paragraphs of plain text and `{ b: "…" }` key points, set heavier. */
 type Seg = string | { b: string };
-type Tile = { title: string; img: string; body: Seg[][]; muted?: boolean; focus?: string };
+/**
+ * `raw`: serve the file as supplied (already web-compressed), without Next re-encoding it.
+ * `lift`: scale the photo up from its bottom edge, so the subject sits higher (top of the photo is trimmed).
+ */
+type Tile = { title: string; img: string; body: Seg[][]; muted?: boolean; focus?: string; raw?: boolean; lift?: number };
 
 const MODES = ["Sauna", "Ice Bath"] as const;
 type Mode = (typeof MODES)[number];
@@ -47,11 +51,12 @@ const TILES: Record<Mode, Tile[]> = {
       body: [["Hemlock timber, soft lighting and built-in speakers."], [{ b: "Set your heat, pick your timer, settle in." }]],
     },
   ],
-  // The first three photos form a continuous scene, ordered from left to right.
+  // First three photos supplied by the client for this section.
   "Ice Bath": [
     {
       title: "Clean water, zero fuss",
-      img: "/products/niseko/why-1.webp",
+      img: "/images/research-ice-1.webp",
+      raw: true,
       body: [
         [{ b: "Ozone filtration" }, " keeps your water purified, sanitised and self-cleaning."],
         [{ b: "Push limits, not maintenance." }],
@@ -59,7 +64,9 @@ const TILES: Record<Mode, Tile[]> = {
     },
     {
       title: "Cold that gets results",
-      img: "/products/niseko/why-2.webp",
+      img: "/images/research-ice-cold.webp",
+      focus: "50% 100%",
+      lift: 1.15,
       body: [
         ["Recover in an ", { b: "icy 3–5°C" }, ", held steady by a powerful 1HP chiller."],
         [{ b: "Or heat to 35°C" }, " to boost circulation before you train."],
@@ -67,7 +74,8 @@ const TILES: Record<Mode, Tile[]> = {
     },
     {
       title: "Built for every season",
-      img: "/products/niseko/why-3.webp",
+      img: "/images/research-ice-3.webp",
+      raw: true,
       body: [
         [{ b: "Certified Canadian red cedar" }, " and a triple-insulated cover lock in the cold, indoors or out."],
         [{ b: "Recover hard, all year round." }],
@@ -77,7 +85,7 @@ const TILES: Record<Mode, Tile[]> = {
       title: "Make it a ritual",
       img: "/images/ice-bath-ritual.webp",
       body: [
-        ["A ", { b: "23 L/min high-flow pump" }, " and simple controls make the cold a daily habit."],
+        [{ b: "High-flow pump and easy controls" }, " make the cold a daily habit."],
         ["Plus ", { b: "free delivery and a 2-year warranty." }],
       ],
     },
@@ -86,30 +94,41 @@ const TILES: Record<Mode, Tile[]> = {
 
 function TileCard({ t, i }: { t: Tile; i: number }) {
   return (
-    <article className="relative flex h-[560px] w-full animate-fade-in flex-col justify-end overflow-hidden motion-reduce:animate-none max-lg:h-[480px]">
+    // clip-path (not just overflow-hidden) so the blurred panel and the scaled photo, which the browser
+    // draws on their own layers, are cut to the same rounded corners in every browser, Safari included.
+    <article className="relative isolate flex h-[560px] w-full animate-fade-in flex-col justify-end overflow-hidden rounded-[8px] [clip-path:inset(0_round_8px)] motion-reduce:animate-none max-lg:h-[480px]">
       <Image
         src={t.img}
         alt=""
         fill
-        sizes="(min-width: 1024px) 320px, 280px"
-        style={t.focus ? { objectPosition: t.focus } : undefined}
+        // Tiles are tall and crop with object-cover, so a photo is drawn about as wide as the tile is tall.
+        sizes="(min-width: 1024px) 560px, 480px"
+        unoptimized={t.raw}
+        style={{
+          objectPosition: t.focus,
+          ...(t.lift && { transform: `scale(${t.lift})`, transformOrigin: "50% 100%" }),
+        }}
         className={`object-cover ${t.muted ? "opacity-70" : ""}`}
       />
+      {/* Height comes from --panel-h (the tallest copy across both tabs), so every panel matches. */}
       <div
-        className={`relative flex h-[210px] flex-col gap-3 p-6 text-white backdrop-blur-[12px] max-lg:h-auto max-lg:min-h-[182px] ${
+        className={`relative min-h-[210px] rounded-b-[8px] p-6 text-white backdrop-blur-[12px] max-lg:min-h-[182px] ${
           t.muted ? "bg-black/45" : "bg-black/70"
         }`}
+        style={{ height: "var(--panel-h, auto)" }}
       >
-        <h3 className="flex items-center gap-[10px]">
-          <span className="text-label-sm">{String(i + 1).padStart(2, "0")}</span>
-          <span className="text-h4">{t.title}</span>
-        </h3>
-        <div className="text-body flex flex-col gap-[1.5em]">
-          {t.body.map((para, j) => (
-            <p key={j}>
-              {para.map((seg, k) => (typeof seg === "string" ? seg : <strong key={k} className="font-medium">{seg.b}</strong>))}
-            </p>
-          ))}
+        <div data-panel-copy className="flex flex-col gap-3">
+          <h3 className="flex items-center gap-[10px]">
+            <span className="text-label-sm">{String(i + 1).padStart(2, "0")}</span>
+            <span className="text-h4">{t.title}</span>
+          </h3>
+          <div className="text-body flex flex-col gap-[1.5em]">
+            {t.body.map((para, j) => (
+              <p key={j}>
+                {para.map((seg, k) => (typeof seg === "string" ? seg : <strong key={k} className="font-medium">{seg.b}</strong>))}
+              </p>
+            ))}
+          </div>
         </div>
       </div>
     </article>
@@ -140,22 +159,57 @@ function Toggle({ mode, onChange }: { mode: Mode; onChange: (m: Mode) => void })
   );
 }
 
+/** Panel padding (p-6, top and bottom), added to the measured copy height. */
+const PANEL_PAD = 48;
+
 export function Research() {
   const [mode, setMode] = useState<Mode>("Sauna");
+  const rows = useRef<HTMLDivElement>(null);
+
+  // Both tabs are rendered (the inactive one invisibly, at the same width), so the tallest copy in
+  // either one sets one panel height for all eight tiles. Re-measured whenever the copy reflows.
+  useEffect(() => {
+    const el = rows.current;
+    if (!el) return;
+    const measure = () => {
+      const copies = el.querySelectorAll<HTMLElement>("[data-panel-copy]");
+      const tallest = Math.max(0, ...Array.from(copies, (c) => c.offsetHeight));
+      el.style.setProperty("--panel-h", `${Math.ceil(tallest) + PANEL_PAD}px`);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    el.querySelectorAll("[data-panel-copy]").forEach((c) => ro.observe(c));
+    return () => ro.disconnect();
+  }, [mode]);
+
   return (
-    <section data-header-theme="dark" className="bg-odin-grey py-16 max-lg:py-10">
+    <section data-header-theme="dark" className="bg-ink py-16 max-lg:py-10">
       <Container className="flex flex-col gap-10 max-lg:gap-5">
         <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
           <h2 className="text-h2 text-white">What The Research Says</h2>
           <Toggle mode={mode} onChange={setMode} />
         </div>
-        <SwipeRow
-          key={mode}
-          label={`What the research says: ${mode.toLowerCase()}`}
-          gap="gap-2"
-          itemClassName="max-lg:w-[280px]"
-          items={TILES[mode].map((t, i) => ({ key: t.title, node: <TileCard t={t} i={i} /> }))}
-        />
+        <div ref={rows} className="relative">
+          {MODES.map((m) => {
+            const on = m === mode;
+            return (
+              <div
+                // Remounts on switch, so the fade replays and the phone row starts at the first tile.
+                key={`${m}-${on}`}
+                aria-hidden={!on}
+                inert={!on}
+                className={on ? "" : "pointer-events-none invisible absolute inset-x-0 top-0"}
+              >
+                <SwipeRow
+                  label={`What the research says: ${m.toLowerCase()}`}
+                  gap="gap-2"
+                  itemClassName="max-lg:w-[280px]"
+                  items={TILES[m].map((t, i) => ({ key: t.title, node: <TileCard t={t} i={i} /> }))}
+                />
+              </div>
+            );
+          })}
+        </div>
       </Container>
     </section>
   );

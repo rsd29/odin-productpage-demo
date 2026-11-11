@@ -177,7 +177,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
         {/* Tap-to-call follows the links (not pinned, so the menu gets the full height). */}
         <div className="mt-6 flex flex-col gap-3 pb-[max(8px,env(safe-area-inset-bottom))]">
           {/* Same look as the homepage "Talk to a Real Person" band: dark, a cream phone with a ripple, the number up front. */}
-          <a href="tel:1300888669" className="relative isolate flex items-center gap-4 overflow-hidden rounded-[10px] bg-ink px-5 py-4">
+          <a href="tel:1300423428" className="relative isolate flex items-center gap-4 overflow-hidden rounded-[10px] bg-ink px-5 py-4">
             <span
               aria-hidden
               className="pointer-events-none absolute -right-16 -top-16 -z-10 size-48 rounded-full bg-[radial-gradient(closest-side,rgba(176,209,227,0.16),transparent)]"
@@ -195,7 +195,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
             </span>
             <span className="flex min-w-0 flex-1 flex-col gap-1">
               <span className="text-h5 text-odin-cream">Talk to a specialist</span>
-              <span className="font-display text-[20px] font-medium leading-none tabular-nums text-odin-cream">1300 888 669</span>
+              <span className="font-display text-[20px] font-medium leading-none tabular-nums text-odin-cream">1300 423 428</span>
               <span className="font-sans text-[12px] font-light text-muted-on-dark">Mon–Sat. Real advice, zero pressure.</span>
             </span>
           </a>

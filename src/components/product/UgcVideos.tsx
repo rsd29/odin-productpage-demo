@@ -9,7 +9,7 @@ import { SWIPE_ROW } from "../ui/SwipeRow";
 type Video = {
   name: string;
   role: string;
-  /** Self-hosted, web-optimised MP4 (fast-start H.264, ≤ 720p) in /public/videos. No file = "coming soon". */
+  /** Self-hosted, web-optimised MP4 (fast-start H.264, ≤ 720p) in /public/videos. No file = poster only (no play controls). */
   src?: string;
   /** Still shown before playback (and the whole tile when there's no video yet). */
   poster: string;
@@ -25,7 +25,8 @@ const VIDEOS: Video[] = [
   { name: "Lewis Hamilton", role: "7-time F1 world champion", poster: `${V}/posters/lewis-hamilton.jpg`, focus: "48% 50%" },
   { name: "Kamaru Usman", role: "UFC welterweight champion", src: `${V}/kamaru-usman.mp4`, poster: `${V}/posters/kamaru-usman.jpg` },
   { name: "Patrick Cripps", role: "2-time Brownlow medallist", src: `${V}/patrick-cripps.mp4`, poster: `${V}/posters/patrick-cripps.jpg` },
-  { name: "Mark Wahlberg", role: "Actor & producer", poster: "" }, // video to come
+  // No poster image yet: the #t fragment makes the browser load and show an early frame as the still.
+  { name: "Mark Wahlberg", role: "Actor & producer", src: `${V}/mark-wahlberg.mp4#t=0.1`, poster: "" },
 ];
 
 const canHover = () => window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -117,9 +118,6 @@ function StoryCard({ video: v, active, onActivate }: { video: Video; active: boo
           {v.poster && (
             <Image src={v.poster} alt="" fill sizes="(min-width: 1024px) 280px, 240px" className="object-cover" style={{ objectPosition: v.focus }} />
           )}
-          <span className="text-label-sm absolute right-[14px] top-[14px] rounded-[4px] bg-[rgba(31,31,31,0.55)] px-2 py-1 text-odin-cream">
-            VIDEO COMING SOON
-          </span>
         </div>
         <Caption v={v} />
       </div>
@@ -170,7 +168,7 @@ function StoryCard({ video: v, active, onActivate }: { video: Video; active: boo
         <video
           ref={ref}
           src={v.src}
-          poster={v.poster}
+          poster={v.poster || undefined}
           muted
           loop
           playsInline
