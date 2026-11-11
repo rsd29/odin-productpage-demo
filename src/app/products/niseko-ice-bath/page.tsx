@@ -3,7 +3,6 @@ import { CampaignBar } from "@/components/product/CampaignBar";
 import { CompareSizesModal } from "@/components/product/CompareSizesModal";
 import { EveryDetail } from "@/components/product/EveryDetail";
 import { Faq } from "@/components/product/Faq";
-import { Footer } from "@/components/product/Footer";
 import { FounderStory } from "@/components/product/FounderStory";
 import { Header } from "@/components/product/Header";
 import { ProductProvider } from "@/components/product/ProductContext";
@@ -36,7 +35,6 @@ export default function ProductPage() {
         <FounderStory />
         <Faq />
       </main>
-      <Footer />
       <CompareSizesModal />
     </ProductProvider>
   );

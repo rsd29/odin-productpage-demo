@@ -66,8 +66,12 @@ const TILES: {
 
 /** Fixed so the photos line up across tiles whatever the copy length. */
 const PANEL = 240;
-/** One crop for the three original portrait photos. */
-const FRAME: Frame = { x: 0.5, y: 0.43 };
+/**
+ * One crop for all three portrait photos, pinned to the top edge: wide desktop tiles crop the photos top
+ * and bottom, and the top is where the model's head is (and the tub rims line up). The bottom that gets
+ * cropped sits under the text panel anyway.
+ */
+const FRAME: Frame = { x: 0.5, y: 0 };
 
 export function TheScience() {
   const row = useRef<HTMLDivElement>(null);
@@ -78,7 +82,10 @@ export function TheScience() {
     >
       <Container className="flex flex-col gap-10 max-lg:gap-8">
         <div className="flex flex-col gap-4">
-          <h2 className="text-h2 text-white">Why choose the Niseko Ice Bath</h2>
+          <h2 className="text-h2 text-white">
+            Why Choose the{" "}
+            <span className="max-lg:block">Niseko Ice Bath</span>
+          </h2>
           <p className="text-body max-w-[720px] text-muted-on-dark">
             Push harder. Recover faster. Build resilience where others break. Niseko delivers cold-driven
             recovery for athletes and high-performers who demand more.
@@ -102,7 +109,7 @@ export function TheScience() {
                   <Image src={t.img} alt="" fill sizes="120px" className="object-cover" />
                 </div>
               </div>
-              <article className="relative flex h-[540px] w-full flex-col justify-end overflow-hidden rounded-[8px] bg-black max-lg:h-[460px]">
+              <article className="relative flex h-[580px] w-full flex-col justify-end overflow-hidden rounded-[8px] bg-black max-lg:h-[490px]">
                 {/* The photo fills the whole tile; the text panel sits over its lower part as frosted glass */}
                 <FramedImage src={t.img} alt="" sizes="480px" ratio={1080 / 1920} {...FRAME} />
                 <div

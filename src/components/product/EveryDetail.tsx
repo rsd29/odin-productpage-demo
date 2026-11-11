@@ -71,7 +71,7 @@ function DetailSheet({
   return (
     <dialog
       ref={ref}
-      aria-label="Every detail, up close"
+      aria-label="Every Detail, Up Close"
       onClose={onClose}
       onClick={(e) => e.target === e.currentTarget && onClose()}
       data-lenis-prevent
@@ -174,7 +174,7 @@ const DETAILS: Detail[] = [
   },
   {
     n: "03",
-    title: "316 stainless steel",
+    title: "Marine grade 316 Stainless Steel",
     at: [0.62, 0.045],
     focus: `${IMG}/10.webp`,
     frame: { x: 0.6, y: 0.39, zoom: 1.3 },
@@ -232,7 +232,7 @@ export function EveryDetail() {
     >
       <Container className="flex min-h-0 flex-col gap-8 max-lg:gap-6">
         <div className="flex flex-col gap-2">
-          <h2 className="text-h2 text-odin-grey">Every detail, up close</h2>
+          <h2 className="text-h2 text-odin-grey">Every Detail, Up Close</h2>
           <p className="text-body text-muted lg:hidden">Tap a number to see each detail up close.</p>
         </div>
 

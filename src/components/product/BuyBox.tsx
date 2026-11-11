@@ -5,7 +5,6 @@ import { useEffect, type ReactNode } from "react";
 import { Button } from "../ui/Button";
 import { CampaignBadge } from "../ui/CampaignBadge";
 import { FeatureIcon, type FeatureIconName } from "../ui/FeatureIcon";
-import { FramedImage, type Frame } from "../ui/FramedImage";
 import { preloadImages } from "../ui/preload";
 import { AfterpayMark, PaymentMarks } from "../ui/PaymentMarks";
 import { UspIcon, type UspIconName } from "../ui/UspIcon";
@@ -22,6 +21,7 @@ import {
   type SizeId,
 } from "./data";
 import { useProduct } from "./ProductContext";
+import { SizeCutout, VARIANT_IMAGES } from "./SizeCutout";
 import { FinishSelector } from "./FinishSelector";
 import { TechnicalDetails } from "./TechnicalDetails";
 
@@ -40,18 +40,6 @@ const USPS: { icon: UspIconName; title: [string, string] }[] = [
   { icon: "concierge", title: ["Lifetime", "Concierge Service"] },
 ];
 
-/** Tub centre + zoom per cut-out (measured from each image's opaque pixels) so every tub fills ~85% of its card. */
-const N = "/products/niseko";
-const VARIANT_FRAME: Record<string, Frame> = {
-  [`${N}/variant-solo.webp`]: { x: 0.415, y: 0.505, zoom: 1.25 },
-  [`${N}/variant-solo-tub.webp`]: { x: 0.49, y: 0.5, zoom: 1.33 },
-  [`${N}/variant-lux.webp`]: { x: 0.485, y: 0.535, zoom: 1.6 },
-  [`${N}/variant-grande.webp`]: { x: 0.5, y: 0.5, zoom: 1.38 },
-  [`${N}/black-1.webp`]: { x: 0.506, y: 0.5, zoom: 1.07 },
-  [`${N}/black-2.webp`]: { x: 0.5, y: 0.5, zoom: 1.31 },
-  [`${N}/black-3.webp`]: { x: 0.502, y: 0.5, zoom: 1.25 },
-  [`${N}/black-4.webp`]: { x: 0.5, y: 0.5, zoom: 1.36 },
-};
 
 /** Radio / checkbox indicator matching the Figma radio (16px). */
 function Indicator({ type, on }: { type: "radio" | "check"; on: boolean }) {
@@ -145,16 +133,12 @@ function SizeCard({ id }: { id: SizeId }) {
       </span>
       {/* Scale the normalised cut-outs by length relative to Grande, on a common baseline. */}
       <span className="relative -mx-[18px] -mb-4 mt-2 h-[145px] w-[calc(100%+36px)] shrink-0 overflow-hidden max-lg:-mx-3 max-lg:-mb-3 max-lg:h-[90px] max-lg:w-[calc(100%+24px)]">
-        <span className="absolute inset-0 origin-bottom" style={{ transform: `scale(${s.length / SIZES.grande.length})` }}>
-          <FramedImage src={src} alt={`Niseko ${s.name}`} sizes="320px" {...VARIANT_FRAME[src]} />
-        </span>
+        <SizeCutout id={id} src={src} sizes="320px" />
       </span>
     </button>
   );
 }
 
-// Every size's cut-out in every finish, so changing colour swaps the size cards instantly.
-const VARIANT_IMAGES = Object.keys(VARIANT_FRAME);
 
 export function BuyBox() {
   useEffect(() => preloadImages(VARIANT_IMAGES, "320px"), []);
@@ -268,7 +252,7 @@ export function BuyBox() {
 
       {/* Warranty + add-ons */}
       <div className="flex flex-col gap-[10px]">
-        <h2 className="text-h5 text-odin-grey">Protect your purchase</h2>
+        <h2 className="text-h5 text-odin-grey">Protect Your Purchase</h2>
         <OptionRow
           role="checkbox"
           indicator="radio"
@@ -296,7 +280,7 @@ export function BuyBox() {
       </div>
 
       <div className="flex flex-col gap-[10px]">
-        <h2 className="text-h5 text-odin-grey">Add filters</h2>
+        <h2 className="text-h5 text-odin-grey">Add Filters</h2>
         {ADDONS.filter((a) => a.id === "filter").map((a) => (
           <OptionRow
             key={a.id}

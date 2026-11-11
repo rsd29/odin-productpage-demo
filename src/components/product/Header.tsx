@@ -7,7 +7,7 @@ import { Container } from "../ui/Container";
 import { LiquidGlass } from "../ui/LiquidGlass";
 import { MegaMenuPanel } from "./MegaMenu";
 import { MobileMenu } from "./MobileMenu";
-import { MENUS, NAV_LINKS } from "./nav";
+import { DESKTOP_MENUS as MENUS, NAV_LINKS } from "./nav";
 
 /** Fallback campaign-bar height; the real one is measured, so the header compacts exactly as the bar leaves. */
 const SCROLL_THRESHOLD = 48;
@@ -214,9 +214,6 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
               <button type="button" aria-label="Search" className={`${CONTROL} cursor-pointer`}>
                 <Image src="/figma/header/search.svg" alt="" width={22} height={22} className={iconInk} />
               </button>
-              <a href="#" aria-label="Account" className={`${CONTROL} max-lg:hidden`}>
-                <Image src="/figma/header/account.svg" alt="" width={22} height={22} className={iconInk} />
-              </a>
               <a href="#" aria-label="Bag, 0 items" className={`${CONTROL} gap-[6px]`}>
                 <Image src="/figma/header/bag.svg" alt="" width={22} height={22} className={iconInk} />
                 <span className={`text-label-sm ${light ? "text-odin-cream" : "text-odin-grey"} ${ink}`}>0</span>

@@ -6,7 +6,6 @@ import { Research } from "@/components/home/Research";
 import { TalkToUs } from "@/components/home/TalkToUs";
 import { TitleReveal } from "@/components/home/TitleReveal";
 import { CampaignBar } from "@/components/product/CampaignBar";
-import { Footer } from "@/components/product/Footer";
 import { FounderStory } from "@/components/product/FounderStory";
 import { Header } from "@/components/product/Header";
 import { Reviews } from "@/components/product/Reviews";
@@ -32,7 +31,6 @@ export default function HomePage() {
         <FounderStory />
         <TalkToUs />
       </main>
-      <Footer />
       {/* Section titles fade in as they scroll into view. */}
       <TitleReveal />
     </>

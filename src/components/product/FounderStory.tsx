@@ -19,8 +19,8 @@ export function FounderStory() {
           className="h-auto w-full"
         />
       </div>
-      <Container className="relative z-10 flex flex-col gap-10 max-lg:gap-6">
-        <h2 className="text-h2 text-odin-grey">In His Own Words, From The Founder Of Odin</h2>
+      {/* Desktop: portrait on the right, level with the title. Phones: title, story, then portrait. */}
+      <Container className="relative z-10">
         <div className="flex flex-row-reverse items-start gap-16 max-xl:gap-10 max-lg:flex-col-reverse max-lg:gap-8">
           {/* Founder portrait: the right-hand part of the photo, centred on Michael. */}
           <div className="relative h-[620px] w-[520px] shrink-0 overflow-hidden rounded-[8px] bg-olive-grey max-xl:w-[40%] max-lg:h-[440px] max-lg:w-full">
@@ -33,38 +33,48 @@ export function FounderStory() {
               y={0.45}
             />
           </div>
-          <div className="text-body flex min-w-0 flex-1 flex-col gap-7 text-olive-grey">
-            <p>
-              In 2020, lockdown shut the gyms. Michael had been training four days a week. Suddenly he was
-              in a two-bedroom apartment with a young family, so every morning he packed the car and
-              trained down at Port Phillip Bay.
-            </p>
-            <p>
-              He set himself one rule: get in the ocean every day. For about a year and a half, through
-              two Melbourne winters, he spent at least five minutes in the water. His head was calmer, he
-              had more energy, and he recovered faster.
-            </p>
-            <blockquote className="border-l-2 border-odin-grey py-1 pl-6">
-              <p className="text-h4 text-odin-grey">
-                “Your nervous system is primed to move calmly through any stresses of the day.”
+          <div className="flex min-w-0 flex-1 flex-col gap-10 max-lg:gap-6">
+            <h2 className="text-h2 text-odin-grey">In His Own Words, From the Founder of Odin</h2>
+            <div className="text-body relative isolate flex flex-col gap-7 text-olive-grey">
+              {/* Phones: the emblem sits centred behind the story copy (the desktop one above is hidden). */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute left-1/2 top-1/2 -z-10 w-[90%] -translate-x-1/2 -translate-y-1/2 rotate-12 opacity-[0.045] lg:hidden"
+              >
+                <Image src="/brand/odin-emblem.svg" alt="" width={442} height={477} sizes="90vw" className="h-auto w-full" />
+              </div>
+              <p>
+                In 2020, lockdown shut the gyms. Michael had been training four days a week. Suddenly he was
+                in a two-bedroom apartment with a young family, so every morning he packed the car and
+                trained down at Port Phillip Bay.
               </p>
-            </blockquote>
-            <p>
-              Back in the gym, he built a routine around hot and cold. Five and a half minutes in the ice,
-              ten to twenty in the sauna with slow breathing, then back into the ice. The problem was the
-              gear: ice baths that were never quite cold, and never quite clean.
-            </p>
-            <p>
-              A few months later, in a friend’s ice bath, he felt his body panic, then used slow breathing
-              to bring it back. That reset is what he wants everyone to have, properly built and at home.
-              It’s why ODIN exists.
-            </p>
-            {/* Signature sits closer to the last paragraph than the paragraphs do to each other. */}
-            <div className="-mt-3 flex flex-col items-start gap-3 self-start">
-              <Signature />
-              <div className="flex flex-col items-start gap-[2px] whitespace-nowrap">
-                <p className="text-h4 text-odin-grey">Michael Clark</p>
-                <p className="text-label-sm text-muted">FOUNDER, ODIN</p>
+              <p>
+                He set himself one rule: get in the ocean every day. For about a year and a half, through
+                two Melbourne winters, he spent at least five minutes in the water. His head was calmer, he
+                had more energy, and he recovered faster.
+              </p>
+              <blockquote className="border-l-2 border-odin-grey py-1 pl-6">
+                <p className="text-h4 text-odin-grey">
+                  “Your nervous system is primed to move calmly through any stresses of the day.”
+                </p>
+              </blockquote>
+              <p>
+                Back in the gym, he built a routine around hot and cold. Five and a half minutes in the ice,
+                ten to twenty in the sauna with slow breathing, then back into the ice. The problem was the
+                gear: ice baths that were never quite cold, and never quite clean.
+              </p>
+              <p>
+                A few months later, in a friend’s ice bath, he felt his body panic, then used slow breathing
+                to bring it back. That reset is what he wants everyone to have, properly built and at home.
+                It’s why ODIN exists.
+              </p>
+              {/* Signature sits closer to the last paragraph than the paragraphs do to each other. */}
+              <div className="-mt-3 flex flex-col items-start gap-3 self-start">
+                <Signature />
+                <div className="flex flex-col items-start gap-[2px] whitespace-nowrap">
+                  <p className="text-h4 text-odin-grey">Michael Clark</p>
+                  <p className="text-label-sm text-muted">FOUNDER, ODIN</p>
+                </div>
               </div>
             </div>
           </div>

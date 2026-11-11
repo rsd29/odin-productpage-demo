@@ -29,11 +29,11 @@ export function PriceLine({ p }: { p: MenuProduct }) {
       {p.was && <s className="text-price text-muted">{p.was}</s>}
       {p.off && (
         // Hovering (or focusing) the product card grows the chip outward to reveal "BLACK FRIDAY" before
-        // the discount. The label animates its grid column from 0 to its natural width.
+        // the discount. On mobile the label stays visible without needing hover.
         <span className="inline-flex items-center rounded-[4px] bg-odin-grey px-[6px] py-[2px] font-display text-[11px] font-medium text-odin-cream">
-          <span className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/item:grid-cols-[1fr] group-focus-visible/item:grid-cols-[1fr] motion-reduce:transition-none">
+          <span className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/item:grid-cols-[1fr] group-focus-visible/item:grid-cols-[1fr] max-lg:grid-cols-[1fr] motion-reduce:transition-none">
             <span className="overflow-hidden whitespace-nowrap">
-              <span className="inline-block -translate-x-1 pr-[5px] tracking-[0.06em] opacity-0 transition-[opacity,translate] duration-300 ease-out group-hover/item:translate-x-0 group-hover/item:opacity-100 group-hover/item:delay-100 group-focus-visible/item:translate-x-0 group-focus-visible/item:opacity-100 motion-reduce:transition-none">
+              <span className="inline-block -translate-x-1 pr-[5px] tracking-[0.06em] opacity-0 transition-[opacity,translate] duration-300 ease-out group-hover/item:translate-x-0 group-hover/item:opacity-100 group-hover/item:delay-100 group-focus-visible/item:translate-x-0 group-focus-visible/item:opacity-100 max-lg:translate-x-0 max-lg:opacity-100 motion-reduce:transition-none">
                 BLACK FRIDAY
               </span>
             </span>

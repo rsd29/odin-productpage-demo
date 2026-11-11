@@ -20,6 +20,9 @@ export function StickyBar() {
   const s = SIZES[size];
   const p = pricingFor(s, tubOnly);
   const addonTotal = ADDONS.filter((a) => addons.has(a.id)).reduce((sum, a) => sum + a.price, 0);
+  const price = p.price ? money(p.price + addonTotal) : priceLabel(p);
+  // Add-ons aren't discounted, so they count towards the was price too.
+  const wasPrice = p.price && p.compareAt ? money(p.compareAt + addonTotal) : undefined;
 
   useEffect(() => {
     if (!ctaEl) return;
@@ -90,17 +93,25 @@ export function StickyBar() {
         style={{ height: STICKY_BAR.height }}
       >
 
-        <p className={`relative min-w-0 flex-1 truncate transition-colors ${EASE}`}>
+        {/* Desktop: name · variant, then the price. */}
+        <p className={`relative min-w-0 flex-1 truncate transition-colors max-lg:hidden ${EASE}`}>
           <span className={`text-h5 ${ink}`}>{PRODUCT_NAME}</span>
-          {/* Phones: just the name, price and button. */}
-          <span className={`text-body max-lg:hidden ${sub}`}>
+          <span className={`text-body ${sub}`}>
             {"  ·  "}
             {variantName(s, tubOnly, finish)}
           </span>
         </p>
-        <span className={`relative whitespace-nowrap font-display text-[24px] font-medium tabular-nums transition-colors max-lg:text-[22px] ${EASE} ${ink}`}>
-          {p.price ? money(p.price + addonTotal) : priceLabel(p)}
+        <span className={`relative whitespace-nowrap font-display text-[24px] font-medium tabular-nums transition-colors max-lg:hidden ${EASE} ${ink}`}>
+          {price}
         </span>
+        {/* Phones: name on top, sale price and struck-through was price underneath. */}
+        <div className={`relative flex min-w-0 flex-1 flex-col gap-[2px] transition-colors lg:hidden ${EASE}`}>
+          <span className={`text-h5 truncate leading-[1.2] ${ink}`}>{PRODUCT_NAME}</span>
+          <span className="flex items-baseline gap-2 whitespace-nowrap font-display font-medium leading-[1.2] tabular-nums">
+            <span className={`text-[17px] ${ink}`}>{price}</span>
+            {wasPrice && <s className={`text-[14px] decoration-[1.5px] ${sub}`}>{wasPrice}</s>}
+          </span>
+        </div>
         <div className="relative max-lg:hidden">
           <CampaignBadge
             campaign={`Save ${money(p.save)}`}

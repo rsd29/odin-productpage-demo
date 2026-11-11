@@ -97,7 +97,10 @@ export function HeatOrCold() {
   return (
     <section id="range" className="scroll-mt-16 bg-odin-cream py-16 max-lg:py-10">
       <Container className="flex flex-col gap-10 max-lg:gap-5">
-        <h2 className="text-h2 text-odin-grey">Choose Your Heat Or Your Cold</h2>
+        <h2 className="text-h2 text-odin-grey">
+          Choose Your Heat{" "}
+          <span className="max-lg:block">Or Your Cold</span>
+        </h2>
         <SwipeRow
           label="Saunas and ice baths"
           gap="gap-6 max-lg:gap-3"

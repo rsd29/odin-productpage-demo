@@ -7,6 +7,7 @@ import { Button } from "../ui/Button";
 import { CampaignBadge } from "../ui/CampaignBadge";
 import { FINISHES, SIZES, SIZE_ORDER, dims, imageFor, money, priceLabel, type SizeId } from "./data";
 import { useProduct } from "./ProductContext";
+import { SizeCutout } from "./SizeCutout";
 
 const ROWS: [string, (id: SizeId) => ReactNode][] = [
   ["Best for", (id) => SIZES[id].description],
@@ -69,7 +70,7 @@ export function CompareSizesModal() {
         <div className="flex items-start gap-4">
           <div className="flex min-w-0 flex-1 flex-col gap-2">
             <h2 id="compare-title" className="text-h2 text-odin-grey">
-              Niseko Ice Bath sizes
+              Niseko Ice Bath Sizes
             </h2>
             <p className="text-body text-muted">
               You’re pursuing greatness. Demand a recovery space that can keep up.
@@ -89,10 +90,14 @@ export function CompareSizesModal() {
           <div className="w-[160px] shrink-0 max-lg:hidden" />
           {SIZE_ORDER.map((id) => (
             <div key={id} className="flex min-w-0 flex-1 flex-col gap-[10px]">
-              <div className="relative h-[150px] w-full overflow-hidden rounded-[8px] max-lg:h-[90px]">
-                <Image src={imageFor(SIZES[id], false, finish)} alt={`Niseko ${SIZES[id].name}`} fill sizes="220px" className="object-cover" />
+              {/* Phones: a 22px strip above the 90px image holds the SELECTED pill, so it never covers the tub. */}
+              <div className="relative h-[150px] w-full max-lg:h-[112px]">
+                <div className="absolute inset-x-0 bottom-0 top-0 overflow-hidden rounded-[8px] max-lg:top-[22px]">
+                  {/* Same framing and relative scale as the size cards in the buy box. */}
+                  <SizeCutout id={id} src={imageFor(SIZES[id], false, finish)} sizes="220px" />
+                </div>
                 {size === id && (
-                  <span className="text-label-sm absolute left-[10px] top-[10px] rounded-[4px] bg-odin-grey px-2 py-1 text-odin-cream">
+                  <span className="text-label-sm absolute left-[10px] top-[10px] rounded-[4px] bg-odin-grey px-2 py-1 text-odin-cream max-lg:left-0 max-lg:top-0 max-lg:px-[6px] max-lg:py-[3px] max-lg:text-[10px]">
                     SELECTED
                   </span>
                 )}
@@ -123,15 +128,17 @@ export function CompareSizesModal() {
 
         <div className="flex items-start gap-6 max-lg:gap-3">
           <div className="w-[160px] shrink-0 max-lg:hidden" />
+          {/* Desktop: each pill a touch shorter than its column, left-aligned under the image. */}
           {SIZE_ORDER.map((id) => (
-            <Button
-              key={id}
-              variant={size === id ? "primary" : "secondary"}
-              className="min-h-11 min-w-0 flex-1 px-4 py-2 max-lg:px-1 max-lg:py-2 max-lg:text-[12px]"
-              onClick={() => choose(id)}
-            >
-              Choose {SIZES[id].name}
-            </Button>
+            <div key={id} className="flex min-w-0 flex-1">
+              <Button
+                variant={size === id ? "primary" : "secondary"}
+                className="min-h-11 w-[85%] min-w-0 px-4 py-2 max-lg:w-full max-lg:px-1 max-lg:py-2 max-lg:text-[12px]"
+                onClick={() => choose(id)}
+              >
+                Choose {SIZES[id].name}
+              </Button>
+            </div>
           ))}
         </div>
       </div>

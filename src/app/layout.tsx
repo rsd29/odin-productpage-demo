@@ -4,6 +4,7 @@ import { Manrope } from "next/font/google";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { Footer } from "@/components/product/Footer";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -25,7 +26,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${manrope.variable} ${neueMontreal.variable} antialiased`}>
       <body>
-        <SmoothScroll>{children}</SmoothScroll>
+        <SmoothScroll>
+          {children}
+          <Footer />
+        </SmoothScroll>
       </body>
     </html>
   );

@@ -2,7 +2,8 @@ import { SIZES, money } from "./data";
 
 /**
  * Header navigation and mega-menu content, shared by the desktop mega menu and the mobile drawer.
- * Only Ice baths has a mega menu: its products as cards, then a "shop all" panel.
+ * Ice baths has a mega menu: its products as cards, then a "shop all" panel. Saunas opens the same way
+ * in the mobile drawer only (desktop keeps it as a plain link).
  *
  * The Niseko is real (prices come from the product data, so campaign prices always match). Fjord and
  * Valhalla are concept placeholders for the demo: names, prices and copy are made up, and their photos
@@ -18,6 +19,8 @@ export type MenuProduct = {
   img: string;
   /** CSS object-position for the card crop (defaults to centre). */
   focus?: string;
+  /** "contain" for cut-outs on transparent, so the whole product shows (defaults to a cover crop). */
+  fit?: "cover" | "contain";
   /** "From" pricing for products sold in several sizes. */
   from?: boolean;
   price?: string;
@@ -32,11 +35,12 @@ export type Menu = {
   label: string;
   products: MenuProduct[];
   all: { eyebrow: string; title: string; links: MenuLink[] };
+  /** Only in the mobile drawer; the desktop header keeps a plain link for it. */
+  mobileOnly?: boolean;
 };
 
 export const NISEKO_HREF = "/products/niseko-ice-bath";
 
-export const CAMPAIGN_NOTE = "Black Friday prices shown. Ends Sunday";
 
 const solo = SIZES.solo.withChiller;
 const NISEKO: MenuProduct = {
@@ -59,6 +63,35 @@ export const NAV_LINKS: { id: string; label: string; href?: string }[] = [
 ];
 
 export const MENUS: Menu[] = [
+  {
+    // Same products and Black Friday "from" prices as the homepage range (HeatOrCold).
+    id: "saunas",
+    label: "Saunas",
+    mobileOnly: true,
+    products: [
+      {
+        name: "Glow+ Infrared Sauna",
+        tagline: "Infrared indoor sauna",
+        img: "/figma/home/glow-plus.webp",
+        fit: "contain",
+        from: true,
+        price: money(3877),
+        was: money(5995),
+        off: "−35%",
+      },
+      {
+        name: "PureLight Outdoor Sauna",
+        tagline: "Full-spectrum heat, built for outdoors",
+        img: "/figma/home/purelight.webp",
+        fit: "contain",
+        from: true,
+        price: money(6877),
+        was: money(9995),
+        off: "−31%",
+      },
+    ],
+    all: { eyebrow: "SAUNAS", title: "Heat that helps you recover", links: [{ label: "Shop all saunas", href: "/#range" }] },
+  },
   {
     id: "ice-baths",
     label: "Ice baths",
@@ -89,3 +122,6 @@ export const MENUS: Menu[] = [
     },
   },
 ];
+
+/** Mega menus shown in the desktop header. */
+export const DESKTOP_MENUS = MENUS.filter((m) => !m.mobileOnly);

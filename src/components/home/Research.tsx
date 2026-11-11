@@ -15,7 +15,7 @@ type Mode = (typeof MODES)[number];
 const TILES: Record<Mode, Tile[]> = {
   Sauna: [
     {
-      title: "Sweat Deeper, Not Hotter",
+      title: "Sweat deeper, not hotter",
       img: "/figma/science/tile-1.png",
       body: [
         [{ b: "A deep, satisfying sweat" }, " without the aggressive heat."],
@@ -23,7 +23,7 @@ const TILES: Record<Mode, Tile[]> = {
       ],
     },
     {
-      title: "Harder Work Sessions",
+      title: "Harder work sessions",
       img: "/figma/science/tile-2.png",
       body: [
         [{ b: "Built-in red light therapy" }, " adds a second layer for recovery, skin and that post-session lift."],
@@ -31,7 +31,7 @@ const TILES: Record<Mode, Tile[]> = {
       ],
     },
     {
-      title: "Put the Benefits on Repeat",
+      title: "Put the benefits on repeat",
       img: "/figma/science/tile-3.png",
       body: [
         [{ b: "Simple setup and easy controls" }, " make it a habit, not a chore."],
@@ -39,7 +39,7 @@ const TILES: Record<Mode, Tile[]> = {
       ],
     },
     {
-      title: "Settle Into Every Detail",
+      title: "Settle into every detail",
       img: "/images/sauna-interior.webp",
       focus: "55% center",
       // A light photo: dimmed, with a lighter panel, as in the design.
@@ -47,17 +47,10 @@ const TILES: Record<Mode, Tile[]> = {
       body: [["Hemlock timber, soft lighting and built-in speakers."], [{ b: "Set your heat, pick your timer, settle in." }]],
     },
   ],
+  // The first three photos form a continuous scene, ordered from left to right.
   "Ice Bath": [
     {
-      title: "Cold That Gets Results",
-      img: "/products/niseko/why-2.webp",
-      body: [
-        ["Recover in an ", { b: "icy 3–5°C" }, ", held steady by a powerful 1HP chiller."],
-        [{ b: "Or heat to 35°C" }, " to boost circulation before you train."],
-      ],
-    },
-    {
-      title: "Clean Water, Zero Fuss",
+      title: "Clean water, zero fuss",
       img: "/products/niseko/why-1.webp",
       body: [
         [{ b: "Ozone filtration" }, " keeps your water purified, sanitised and self-cleaning."],
@@ -65,7 +58,15 @@ const TILES: Record<Mode, Tile[]> = {
       ],
     },
     {
-      title: "Built for Every Season",
+      title: "Cold that gets results",
+      img: "/products/niseko/why-2.webp",
+      body: [
+        ["Recover in an ", { b: "icy 3–5°C" }, ", held steady by a powerful 1HP chiller."],
+        [{ b: "Or heat to 35°C" }, " to boost circulation before you train."],
+      ],
+    },
+    {
+      title: "Built for every season",
       img: "/products/niseko/why-3.webp",
       body: [
         [{ b: "Certified Canadian red cedar" }, " and a triple-insulated cover lock in the cold, indoors or out."],
@@ -73,7 +74,7 @@ const TILES: Record<Mode, Tile[]> = {
       ],
     },
     {
-      title: "Make It a Ritual",
+      title: "Make it a ritual",
       img: "/images/ice-bath-ritual.webp",
       body: [
         ["A ", { b: "23 L/min high-flow pump" }, " and simple controls make the cold a daily habit."],

@@ -7,28 +7,28 @@ const CARDS = [
   {
     icon: "delivery",
     stat: "Free",
-    title: "Metro Delivery, On Us",
+    title: "Metro delivery, on us",
     body: "We bring your sauna or ice bath right to your door across metro areas, at no extra cost. Pick a delivery window that suits you, so there’s no waiting around all day.",
     link: "How delivery works",
   },
   {
     icon: "returns",
     stat: "30 days",
-    title: "Try It at Home",
+    title: "Try it at home",
     body: "Live with it for a full month. If it’s not the right fit for your space or your routine, send it back. Easy returns, no hard sell.",
     link: "Our returns policy",
   },
   {
     icon: "warranty",
     stat: "2 years",
-    title: "Warranty, Built In",
+    title: "Warranty, built in",
     body: "Every Odin is covered for two full years. If anything isn’t right, a real person on our team sorts it out, fast.",
     link: "Warranty details",
   },
   {
     icon: "pay",
     stat: "$75/wk",
-    title: "Pay Over Time",
+    title: "Pay over time",
     body: "Spread the cost with Afterpay or Zip at checkout. Start your recovery routine today and pay for it as you go.",
     link: "Ways to pay",
   },
@@ -61,7 +61,7 @@ export function OdinPromise() {
   return (
     <section data-header-theme="dark" className="bg-ink py-16 max-lg:py-10">
       <Container className="flex flex-col gap-10 max-lg:gap-6">
-        <h2 className="text-h2 text-white">Why Choose Us</h2>
+        <h2 className="text-h2 text-white">The Odin Difference, Redefined</h2>
         <SwipeRow
           label="The ODIN promise"
           gap="gap-4 max-lg:gap-3"
