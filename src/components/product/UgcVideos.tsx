@@ -17,7 +17,7 @@ export function UgcVideos({ product = "the Niseko" }: { product?: string }) {
       <Container className="flex flex-col gap-12 max-lg:gap-8">
         <div className="flex items-end gap-6 max-lg:flex-col max-lg:items-start max-lg:gap-4">
           <div className="flex min-w-0 flex-1 flex-col gap-4">
-            <h2 className="text-h2 text-odin-cream">Real routines, real recovery</h2>
+            <h2 className="text-h2 text-odin-cream">Real Routines, Real Recovery</h2>
             <p className="text-body text-muted-on-dark">
               How athletes and everyday recoverers fit {product} into their week.
             </p>

@@ -14,7 +14,7 @@ export function ContrastTherapy() {
     <section data-header-theme="dark" className="bg-odin-grey py-16 max-lg:py-10">
       <Container className="flex items-center gap-[107px] max-xl:gap-14 max-lg:flex-col max-lg:items-stretch max-lg:gap-8">
         <div className="flex w-[460px] shrink-0 flex-col items-start gap-[43px] max-xl:w-[400px] max-lg:w-full max-lg:gap-6">
-          <h2 className="text-h2 text-odin-cream">Hot, then cold, then again</h2>
+          <h2 className="text-h2 text-odin-cream">Hot, Then Cold, Then Again</h2>
           <p className="text-body text-muted-on-dark">
             Pair Glow+ with the Niseko Ice Bath and get the hot and cold reset athletes swear by, in your own home.
             No gym membership, no waiting for a free bath.

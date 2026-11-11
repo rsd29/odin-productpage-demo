@@ -107,7 +107,7 @@ export function Reviews() {
     <section id="reviews" data-header-theme="dark" className="overflow-hidden bg-olive-grey py-16 max-lg:py-10">
       <Container className="flex flex-col gap-14 max-lg:gap-10">
         <div className="flex flex-col gap-4">
-          <h2 className="text-h2 text-white">Trusted by 30,000+ happy customers</h2>
+          <h2 className="text-h2 text-white">Trusted By 30,000+ Happy Customers</h2>
           <p className="text-body text-muted-on-dark">And by elite Australian athletes.</p>
         </div>
 

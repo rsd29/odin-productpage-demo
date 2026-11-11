@@ -1,11 +1,12 @@
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes } from "react";
 
-type Variant = "primary" | "secondary" | "inverse";
+type Variant = "primary" | "secondary" | "inverse" | "inverseOutline";
 
 const variants: Record<Variant, string> = {
   primary: "bg-odin-grey text-odin-cream hover:bg-black",
   secondary: "border-[1.2px] border-odin-grey text-odin-grey hover:bg-odin-grey/5",
   inverse: "bg-odin-cream text-odin-grey hover:bg-white",
+  inverseOutline: "border-[1.2px] border-odin-cream text-odin-cream hover:bg-odin-cream/10",
 };
 
 const base =

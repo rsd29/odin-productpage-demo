@@ -8,7 +8,7 @@ export function FounderStory() {
     <section id="founder" className="relative isolate scroll-mt-16 overflow-hidden bg-warm-off-white py-16 max-lg:py-10">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-[4%] top-1/2 max-lg:hidden w-[min(48vw,700px)] -translate-y-1/2 -rotate-12 opacity-[0.045] [mask-image:linear-gradient(to_right,transparent,black_30%)]"
+        className="pointer-events-none absolute -left-[4%] top-1/2 max-lg:hidden w-[min(48vw,700px)] -translate-y-1/2 rotate-12 opacity-[0.045] [mask-image:linear-gradient(to_left,transparent,black_30%)]"
       >
         <Image
           src="/brand/odin-emblem.svg"
@@ -20,7 +20,7 @@ export function FounderStory() {
         />
       </div>
       <Container className="relative z-10 flex flex-col gap-10 max-lg:gap-6">
-        <h2 className="text-h2 text-odin-grey">In his own words, from the Founder of Odin</h2>
+        <h2 className="text-h2 text-odin-grey">In His Own Words, From The Founder Of Odin</h2>
         <div className="flex flex-row-reverse items-start gap-16 max-xl:gap-10 max-lg:flex-col-reverse max-lg:gap-8">
           {/* Founder portrait: the right-hand part of the photo, centred on Michael. */}
           <div className="relative h-[620px] w-[520px] shrink-0 overflow-hidden rounded-[8px] bg-olive-grey max-xl:w-[40%] max-lg:h-[440px] max-lg:w-full">
@@ -59,10 +59,10 @@ export function FounderStory() {
               to bring it back. That reset is what he wants everyone to have, properly built and at home.
               It’s why ODIN exists.
             </p>
-            {/* The signature image has empty space below the ink, hence the negative margin. */}
-            <div className="flex flex-col items-start self-start">
+            {/* Signature sits closer to the last paragraph than the paragraphs do to each other. */}
+            <div className="-mt-3 flex flex-col items-start gap-3 self-start">
               <Signature />
-              <div className="-mt-9 flex flex-col items-start gap-[2px] whitespace-nowrap max-lg:-mt-8">
+              <div className="flex flex-col items-start gap-[2px] whitespace-nowrap">
                 <p className="text-h4 text-odin-grey">Michael Clark</p>
                 <p className="text-label-sm text-muted">FOUNDER, ODIN</p>
               </div>

@@ -27,7 +27,7 @@ import { TechnicalDetails } from "./TechnicalDetails";
 
 /** Key features above the size picker. The chiller ones drop out when "Tub only" is chosen. */
 const HERO_FEATURES: { icon: FeatureIconName; title: string; body: string; colour: string; chiller?: boolean }[] = [
-  { icon: "cedar", colour: "text-[#57734f]", title: "Canadian red cedar", body: "Certified sustainable" },
+  { icon: "cedar", colour: "text-[#a0503a]", title: "Canadian red cedar", body: "Certified sustainable" },
   { icon: "steel", colour: "text-[#637585]", title: "Marine-grade 316 steel", body: "Premium stainless steel tub" },
   { icon: "chiller", colour: "text-[#397e9f]", title: "Powerful 1HP chiller", body: "Cools to 3°C, heats to 35°C", chiller: true },
   { icon: "flow", colour: "text-[#397f7a]", title: "23 L/min high-flow pump", body: "With ozone filtration", chiller: true },

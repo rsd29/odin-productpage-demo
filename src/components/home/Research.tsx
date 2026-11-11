@@ -1,48 +1,91 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 import { Container } from "../ui/Container";
 import { SwipeRow } from "../ui/SwipeRow";
 
 /** Body copy as paragraphs of plain text and `{ b: "…" }` key points, set heavier. */
 type Seg = string | { b: string };
+type Tile = { title: string; img: string; body: Seg[][]; muted?: boolean; focus?: string };
 
-const TILES: { title: string; img: string; body: Seg[][]; muted?: boolean; focus?: string }[] = [
-  {
-    title: "Sweat deeper, not hotter",
-    img: "/figma/science/tile-1.png",
-    body: [
-      [{ b: "A deep, satisfying sweat" }, " without the aggressive heat."],
-      ["Full-spectrum infrared you can dial from ", { b: "30°C to 70°C" }, "."],
-    ],
-  },
-  {
-    title: "Harder work sessions",
-    img: "/figma/science/tile-2.png",
-    body: [
-      [{ b: "Built-in red light therapy" }, " adds a second layer for recovery, skin and that post-session lift."],
-      [{ b: "No extra device needed." }],
-    ],
-  },
-  {
-    title: "Put the benefits on repeat",
-    img: "/figma/science/tile-3.png",
-    body: [
-      [{ b: "Simple setup and easy controls" }, " make it a habit, not a chore."],
-      ["Plus ", { b: "free delivery and a 2-year warranty." }],
-    ],
-  },
-  {
-    title: "Settle into every detail",
-    img: "/images/sauna-interior.webp",
-    focus: "55% center",
-    // A light photo: dimmed, with a lighter panel, as in the design.
-    muted: true,
-    body: [["Hemlock timber, soft lighting and built-in speakers."], [{ b: "Set your heat, pick your timer, settle in." }]],
-  },
-];
+const MODES = ["Sauna", "Ice Bath"] as const;
+type Mode = (typeof MODES)[number];
 
-function Tile({ t, i }: { t: (typeof TILES)[number]; i: number }) {
+const TILES: Record<Mode, Tile[]> = {
+  Sauna: [
+    {
+      title: "Sweat Deeper, Not Hotter",
+      img: "/figma/science/tile-1.png",
+      body: [
+        [{ b: "A deep, satisfying sweat" }, " without the aggressive heat."],
+        ["Full-spectrum infrared you can dial from ", { b: "30°C to 70°C" }, "."],
+      ],
+    },
+    {
+      title: "Harder Work Sessions",
+      img: "/figma/science/tile-2.png",
+      body: [
+        [{ b: "Built-in red light therapy" }, " adds a second layer for recovery, skin and that post-session lift."],
+        [{ b: "No extra device needed." }],
+      ],
+    },
+    {
+      title: "Put the Benefits on Repeat",
+      img: "/figma/science/tile-3.png",
+      body: [
+        [{ b: "Simple setup and easy controls" }, " make it a habit, not a chore."],
+        ["Plus ", { b: "free delivery and a 2-year warranty." }],
+      ],
+    },
+    {
+      title: "Settle Into Every Detail",
+      img: "/images/sauna-interior.webp",
+      focus: "55% center",
+      // A light photo: dimmed, with a lighter panel, as in the design.
+      muted: true,
+      body: [["Hemlock timber, soft lighting and built-in speakers."], [{ b: "Set your heat, pick your timer, settle in." }]],
+    },
+  ],
+  "Ice Bath": [
+    {
+      title: "Cold That Gets Results",
+      img: "/products/niseko/why-2.webp",
+      body: [
+        ["Recover in an ", { b: "icy 3–5°C" }, ", held steady by a powerful 1HP chiller."],
+        [{ b: "Or heat to 35°C" }, " to boost circulation before you train."],
+      ],
+    },
+    {
+      title: "Clean Water, Zero Fuss",
+      img: "/products/niseko/why-1.webp",
+      body: [
+        [{ b: "Ozone filtration" }, " keeps your water purified, sanitised and self-cleaning."],
+        [{ b: "Push limits, not maintenance." }],
+      ],
+    },
+    {
+      title: "Built for Every Season",
+      img: "/products/niseko/why-3.webp",
+      body: [
+        [{ b: "Certified Canadian red cedar" }, " and a triple-insulated cover lock in the cold, indoors or out."],
+        [{ b: "Recover hard, all year round." }],
+      ],
+    },
+    {
+      title: "Make It a Ritual",
+      img: "/images/ice-bath-ritual.webp",
+      body: [
+        ["A ", { b: "23 L/min high-flow pump" }, " and simple controls make the cold a daily habit."],
+        ["Plus ", { b: "free delivery and a 2-year warranty." }],
+      ],
+    },
+  ],
+};
+
+function TileCard({ t, i }: { t: Tile; i: number }) {
   return (
-    <article className="relative flex h-[560px] w-full flex-col justify-end overflow-hidden max-lg:h-[480px]">
+    <article className="relative flex h-[560px] w-full animate-fade-in flex-col justify-end overflow-hidden motion-reduce:animate-none max-lg:h-[480px]">
       <Image
         src={t.img}
         alt=""
@@ -72,16 +115,45 @@ function Tile({ t, i }: { t: (typeof TILES)[number]; i: number }) {
   );
 }
 
+/** Pill switch between the two product types. */
+function Toggle({ mode, onChange }: { mode: Mode; onChange: (m: Mode) => void }) {
+  return (
+    <div role="group" aria-label="Show research for" className="inline-flex shrink-0 rounded-full border border-white/20 p-1">
+      {MODES.map((m) => {
+        const on = m === mode;
+        return (
+          <button
+            key={m}
+            type="button"
+            aria-pressed={on}
+            onClick={() => onChange(m)}
+            className={`text-label-md cursor-pointer rounded-full px-6 py-2.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white max-lg:px-5 max-lg:py-2 ${
+              on ? "bg-odin-cream text-odin-grey" : "text-white/70 hover:text-white"
+            }`}
+          >
+            {m}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export function Research() {
+  const [mode, setMode] = useState<Mode>("Sauna");
   return (
     <section data-header-theme="dark" className="bg-odin-grey py-16 max-lg:py-10">
       <Container className="flex flex-col gap-10 max-lg:gap-5">
-        <h2 className="text-h2 text-white">What the research says</h2>
+        <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
+          <h2 className="text-h2 text-white">What The Research Says</h2>
+          <Toggle mode={mode} onChange={setMode} />
+        </div>
         <SwipeRow
-          label="What the research says"
+          key={mode}
+          label={`What the research says: ${mode.toLowerCase()}`}
           gap="gap-2"
           itemClassName="max-lg:w-[280px]"
-          items={TILES.map((t, i) => ({ key: t.title, node: <Tile t={t} i={i} /> }))}
+          items={TILES[mode].map((t, i) => ({ key: t.title, node: <TileCard t={t} i={i} /> }))}
         />
       </Container>
     </section>

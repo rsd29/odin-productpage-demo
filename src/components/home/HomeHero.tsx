@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { NISEKO_HREF } from "../product/nav";
 import { ButtonLink } from "../ui/Button";
 import { Container } from "../ui/Container";
@@ -13,27 +13,8 @@ import { Container } from "../ui/Container";
 const HERO_VIDEO: string | undefined = undefined;
 const POSTER = "/images/home-hero.webp";
 
-const CONTROL =
-  "flex size-11 cursor-pointer items-center justify-center rounded-full border border-white/40 bg-white/[0.16] backdrop-blur-[6px] transition-colors hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
-
 export function HomeHero() {
-  const video = useRef<HTMLVideoElement>(null);
-  const [paused, setPaused] = useState(false);
-  const [muted, setMuted] = useState(true);
   const [progress, setProgress] = useState(0);
-
-  const togglePlay = () => {
-    const v = video.current;
-    if (v) {
-      if (v.paused) void v.play();
-      else v.pause();
-    }
-    setPaused((p) => !p);
-  };
-  const toggleMute = () => {
-    if (video.current) video.current.muted = !muted;
-    setMuted((m) => !m);
-  };
 
   return (
     <section
@@ -45,7 +26,6 @@ export function HomeHero() {
       <Image src={POSTER} alt="" fill priority sizes="(max-width: 1023px) 1800px, 100vw" className="-z-20 object-cover max-lg:object-[43%_center]" />
       {HERO_VIDEO && (
         <video
-          ref={video}
           src={HERO_VIDEO}
           poster={POSTER}
           autoPlay
@@ -64,37 +44,16 @@ export function HomeHero() {
       <Container className="relative">
         <div className="flex max-w-[720px] flex-col items-start gap-7 max-lg:gap-5">
           <h1 className="text-display animate-title-in text-odin-cream motion-reduce:animate-none">
-            Forged in fire <br className="lg:hidden" />
-            An Icon Reborn
+            Forged In Fire. <br className="lg:hidden" />
+            An Icon Reborn.
           </h1>
           <p className="text-h3 text-white max-lg:text-body">Pro-level saunas and ice baths, built for the home</p>
           <div className="flex flex-wrap items-center gap-6 pt-2">
             <ButtonLink href="#range" variant="inverse">
-              Shop saunas
+              Shop Saunas
             </ButtonLink>
-            <ButtonLink href={NISEKO_HREF} variant="inverse">Shop ice baths</ButtonLink>
+            <ButtonLink href={NISEKO_HREF} variant="inverseOutline">Shop Ice Baths</ButtonLink>
           </div>
-        </div>
-        <div className="absolute bottom-[-4px] right-20 flex gap-3 max-lg:hidden">
-          <button type="button" onClick={toggleMute} aria-label={muted ? "Turn sound on" : "Turn sound off"} className={CONTROL}>
-            {muted ? (
-              <Image src="/figma/home/sound-off.svg" alt="" width={18} height={18} />
-            ) : (
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                <path d="M3 7H6L10 4V14L6 11H3V7Z" />
-                <path d="M12.5 6.5c.9.7 1.5 1.5 1.5 2.5s-.6 1.8-1.5 2.5" />
-              </svg>
-            )}
-          </button>
-          <button type="button" onClick={togglePlay} aria-label={paused ? "Play video" : "Pause video"} className={CONTROL}>
-            {paused ? (
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="white" aria-hidden>
-                <path d="M5 3.5v9l7.5-4.5z" />
-              </svg>
-            ) : (
-              <Image src="/figma/home/pause.svg" alt="" width={16} height={16} />
-            )}
-          </button>
         </div>
       </Container>
 

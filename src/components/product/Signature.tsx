@@ -49,11 +49,11 @@ export function Signature() {
       }}
     >
       <Image
-        src="/figma/founder/signature.png"
+        src="/figma/founder/signature-trim.png"
         alt="Michael Clark signature"
-        width={340}
-        height={138}
-        className="h-[138px] w-[340px] object-contain max-lg:h-auto max-lg:w-[220px]"
+        width={418}
+        height={58}
+        className="h-auto w-[260px] max-lg:w-[200px]"
       />
     </div>
   );
