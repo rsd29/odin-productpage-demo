@@ -175,15 +175,6 @@ export function BuyBox() {
         </p>
       </div>
 
-      {/* Phones: buy straight from the price, rather than scrolling past every option to reach the cart. */}
-      <Button
-        className="h-14 w-full justify-between! gap-3 px-5 py-0 lg:hidden"
-        aria-label={`Add to Cart: ${PRODUCT_NAME}, ${variantName(s, tubOnly, finish)}${p.price ? `, ${money(p.price + addonTotal)}` : ""}`}
-      >
-        <span>Add to Cart</span>
-        {p.price && <span className="font-display text-[22px] font-medium tabular-nums">{money(p.price + addonTotal)}</span>}
-      </Button>
-
       {/* Key features (the chiller ones drop out for "Tub only"). */}
       {/* Two across when each box has room for one-line copy (≥ 240px), otherwise one column. */}
       <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3">
