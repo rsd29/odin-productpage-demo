@@ -1,7 +1,7 @@
 "use client";
 
 import { useLenis } from "lenis/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/Button";
 import { CampaignBadge } from "../ui/CampaignBadge";
 import { ADDONS, PRODUCT_NAME, SIZES, money, priceLabel, pricingFor, variantName } from "./data";
@@ -16,6 +16,7 @@ export function StickyBar() {
   const { size, finish, tubOnly, addons, ctaEl, stickyBarVisible: visible, setStickyBarVisible: setVisible } = useProduct();
   const lenis = useLenis();
   const [onDark, setOnDark] = useState(false);
+  const bar = useRef<HTMLDivElement>(null);
   const s = SIZES[size];
   const p = pricingFor(s, tubOnly);
   const addonTotal = ADDONS.filter((a) => addons.has(a.id)).reduce((sum, a) => sum + a.price, 0);
@@ -47,7 +48,8 @@ export function StickyBar() {
   // Adaptive contrast: a solid grey bar on light sections, a solid cream one over dark sections.
   useEffect(() => {
     const probe = () => {
-      const y = window.innerHeight - STICKY_BAR.bottom - STICKY_BAR.height / 2;
+      const height = bar.current?.offsetHeight ?? STICKY_BAR.height;
+      const y = window.innerHeight - STICKY_BAR.bottom - height / 2;
       setOnDark(
         Array.from(document.querySelectorAll<HTMLElement>("[data-header-theme='dark']")).some((el) => {
           const r = el.getBoundingClientRect();
@@ -83,7 +85,8 @@ export function StickyBar() {
       style={{ bottom: STICKY_BAR.bottom }}
     >
       <div
-        className={`relative flex w-[760px] max-w-full items-center gap-3 overflow-hidden rounded-full py-2.5 pl-6 pr-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.25)] transition-colors max-lg:pl-5 ${EASE} ${fill}`}
+        ref={bar}
+        className={`relative flex w-[760px] max-w-full items-center gap-3 overflow-hidden rounded-full py-2.5 pl-6 pr-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.25)] transition-colors max-lg:h-[60px]! max-lg:py-2 max-lg:pl-5 max-lg:pr-2 ${EASE} ${fill}`}
         style={{ height: STICKY_BAR.height }}
       >
 
@@ -106,7 +109,7 @@ export function StickyBar() {
         </div>
         <Button
           variant={onDark ? "primary" : "inverse"}
-          className="relative h-12 shrink-0 px-6 py-0 font-display! text-[15px]! font-medium! max-lg:px-4"
+          className="relative h-12 shrink-0 px-6 py-0 font-display! text-[15px]! font-medium! max-lg:h-11 max-lg:px-4"
           onClick={() => lenis?.scrollTo(0)}
         >
           Add to Cart

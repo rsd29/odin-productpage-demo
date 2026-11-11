@@ -100,16 +100,24 @@ function OptionRow({
       aria-checked={selected}
       disabled={disabled}
       onClick={onClick}
-      className={`flex w-full items-center gap-3 rounded-[6px] bg-white px-4 py-3 text-left ${compact ? "h-full flex-wrap content-start" : ""} ${
-        selected ? "border-[1.5px] border-odin-grey" : "border border-line"
+      className={`w-full gap-3 rounded-[6px] bg-white px-4 py-3 text-left ${
+        compact
+          ? "grid h-full min-w-0 grid-cols-[16px_minmax(0,1fr)] grid-rows-[1fr_auto] items-start border max-lg:gap-x-2 max-lg:px-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-odin-grey"
+          : "flex items-center"
+      } ${
+        compact
+          ? selected ? "border-odin-grey shadow-[inset_0_0_0_0.5px_var(--color-odin-grey)]" : "border-line"
+          : selected ? "border-[1.5px] border-odin-grey" : "border border-line"
       } ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:border-muted"}`}
     >
-      <Indicator type={indicator} on={selected} />
+      <span className={compact ? "mt-[2px] flex" : "flex shrink-0"}>
+        <Indicator type={indicator} on={selected} />
+      </span>
       <span className="flex min-w-0 flex-1 flex-col gap-[2px]">
-        <span className={`${compact ? "font-display text-[15px] font-medium leading-snug" : "text-h5"} text-odin-grey`}>{title}</span>
+        <span className={`${compact ? "font-display text-[15px] font-medium leading-snug max-lg:text-[14px]" : "text-h5"} text-odin-grey`}>{title}</span>
         {note && <span className="text-body text-muted">{note}</span>}
       </span>
-      <span className={`text-price whitespace-nowrap text-odin-grey ${compact ? "w-full pl-7" : ""}`}>{aside}</span>
+      <span className={`text-price whitespace-nowrap text-odin-grey ${compact ? "col-start-2 row-start-2" : ""}`}>{aside}</span>
     </button>
   );
 }
@@ -308,10 +316,13 @@ export function BuyBox() {
       <div className="flex items-center gap-[14px] rounded-[6px] border border-line bg-white px-4 py-[14px]">
         <Image src="/figma/hero/truck.svg" alt="" width={22} height={22} />
         <div className="flex min-w-0 flex-1 flex-col gap-[2px]">
-          <p className="text-label-md text-odin-grey">Now available. Order today!</p>
+          <p className="text-label-md whitespace-nowrap text-odin-grey">Now available. Order today!</p>
           <p className="text-body text-muted">Fast delivery. Delivery times TBC</p>
+          <a href="tel:1300888669" className="text-body mt-1 self-start text-[13px] text-odin-grey underline lg:hidden">
+            Request a callback
+          </a>
         </div>
-        <a href="tel:1300888669" className="text-body whitespace-nowrap text-odin-grey hover:underline max-lg:text-[13px]">
+        <a href="tel:1300888669" className="text-body whitespace-nowrap text-odin-grey hover:underline max-lg:hidden">
           Request a callback
         </a>
       </div>
@@ -325,7 +336,7 @@ export function BuyBox() {
           >
             <span className="font-display text-[16px] font-medium leading-none">Add to Cart</span>
             {p.price && (
-              <span className="border-l border-odin-cream/30 pl-5 font-display text-[24px] font-medium leading-none tabular-nums text-odin-cream">
+              <span className="border-l border-odin-cream/30 pl-5 font-display text-[20px] font-medium leading-none tabular-nums text-odin-cream">
                 {money(p.price + addonTotal)}
               </span>
             )}

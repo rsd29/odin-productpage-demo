@@ -27,7 +27,10 @@ export function TrustBar() {
   return (
     <section className="overflow-hidden bg-warm-off-white py-14 max-lg:py-10">
       <Container className="pb-10 max-lg:pb-8">
-        <h2 className="text-h2 text-odin-grey">Trusted by elite Australian athletes</h2>
+        <h2 className="text-h2 text-odin-grey">
+          Trusted by elite{" "}
+          <span className="max-lg:whitespace-nowrap">Australian athletes</span>
+        </h2>
       </Container>
       <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)] motion-reduce:overflow-x-auto">
         <div

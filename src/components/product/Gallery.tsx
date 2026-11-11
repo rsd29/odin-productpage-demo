@@ -60,10 +60,9 @@ const Chevron = ({ up }: { up?: boolean }) => (
 
 export function Gallery() {
   const [active, setActive] = useState(0);
-  // The image being crossfaded out, kept underneath until the new one has faded in.
-  // The image being crossfaded out (by path, so it survives a colour change), kept until the new one is in.
+  // Keep the last loaded photo underneath while the requested photo loads and fades in.
   const [prev, setPrev] = useState<string | null>(null);
-  const [ready, setReady] = useState(true);
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
   const [edges, setEdges] = useState({ start: false, end: true, v: true });
   const rail = useRef<HTMLDivElement>(null);
   const railInner = useRef<HTMLDivElement>(null);
@@ -72,18 +71,21 @@ export function Gallery() {
   const thumbs = useRef<(HTMLButtonElement | null)[]>([]);
   const { stickyBarVisible, finish } = useProduct();
   const images = GALLERY[finish];
+  const src = images[active];
+  const ready = loadedSrc === src;
   // A new finish starts its gallery from the first photo, crossfading from the photo on screen.
   const [galleryFinish, setGalleryFinish] = useState(finish);
   if (galleryFinish !== finish) {
     setGalleryFinish(finish);
-    setPrev(GALLERY[galleryFinish][active]);
-    setReady(false);
+    const outgoing = GALLERY[galleryFinish][active];
+    if (loadedSrc === outgoing) setPrev(outgoing);
+    setLoadedSrc(null);
     setActive(0);
   }
 
-  // Preload every finish's photos (main image + thumbnails) when the browser is idle, current finish
-  // first, so switching photo or colour never waits on the network.
+  // Start the black photos immediately, ahead of the longer background gallery queue.
   useEffect(() => {
+    preloadImages(BLACK, "720px", { eager: true });
     const order = [finish, ...FINISHES.filter((f) => f !== finish)];
     for (const f of order) {
       preloadImages(GALLERY[f], "720px");
@@ -96,8 +98,8 @@ export function Gallery() {
   const select = (i: number) => {
     const next = (i + images.length) % images.length;
     if (next === active) return;
-    setPrev(images[active]);
-    setReady(false);
+    if (ready) setPrev(src);
+    setLoadedSrc(null);
     setActive(next);
   };
 
@@ -295,27 +297,27 @@ export function Gallery() {
       >
         {/* Crossfade: the outgoing image stays underneath until the incoming one has loaded and faded in. */}
         {prev !== null && (
-          <div key={`prev-${prev}`} className="absolute inset-0">
+          <div key={`prev-${prev}`} aria-hidden="true" className="absolute inset-0 bg-warm-off-white">
             <FramedImage src={prev} alt="" sizes="720px" {...FRAME[prev]} />
           </div>
         )}
         <div
-          key={images[active]}
-          className={`absolute inset-0 ${ready ? "animate-gallery-in motion-reduce:animate-none" : "opacity-0"}`}
+          key={src}
+          className={`absolute inset-0 bg-warm-off-white ${ready ? "animate-gallery-in motion-reduce:animate-none" : "opacity-0"}`}
           onAnimationEnd={() => setPrev(null)}
         >
           <FramedImage
-            src={images[active]}
+            src={src}
             alt={`Niseko Ice Bath, image ${active + 1} of ${images.length}`}
             priority={active === 0}
             sizes="720px"
             onLoad={() => {
-              setReady(true);
+              setLoadedSrc(src);
               // No fade with reduced motion, so drop the outgoing layer straight away.
               if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
                 setPrev(null);
             }}
-            {...FRAME[images[active]]}
+            {...FRAME[src]}
           />
         </div>
       </div>

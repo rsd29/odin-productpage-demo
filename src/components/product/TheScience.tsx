@@ -16,8 +16,6 @@ const TILES: {
   title: string;
   body: Seg[][];
   img: string;
-  ratio?: number;
-  frame?: Frame;
 }[] = [
   {
     tag: "Advanced filtration",
@@ -62,15 +60,13 @@ const TILES: {
       ],
       [{ b: "So you recover hard, all-year-round." }],
     ],
-    img: "/images/cedar-detail.webp",
-    ratio: 1,
-    frame: { x: 0.5, y: 0.47 },
+    img: "/products/niseko/why-3.webp",
   },
 ];
 
 /** Fixed so the photos line up across tiles whatever the copy length. */
 const PANEL = 240;
-/** Default framing for the original portrait photos; material details supply their own. */
+/** One crop for the three original portrait photos. */
 const FRAME: Frame = { x: 0.5, y: 0.43 };
 
 export function TheScience() {
@@ -108,7 +104,7 @@ export function TheScience() {
               </div>
               <article className="relative flex h-[540px] w-full flex-col justify-end overflow-hidden rounded-[8px] bg-black max-lg:h-[460px]">
                 {/* The photo fills the whole tile; the text panel sits over its lower part as frosted glass */}
-                <FramedImage src={t.img} alt="" sizes="480px" ratio={t.ratio ?? 1080 / 1920} {...(t.frame ?? FRAME)} />
+                <FramedImage src={t.img} alt="" sizes="480px" ratio={1080 / 1920} {...FRAME} />
                 <div
                   // Fixed height on wide screens so the photos line up; narrower tiles let the panel grow to fit the copy.
                   className="relative flex flex-col gap-3 border-t border-white/10 bg-[rgb(20_20_20/0.45)] p-6 text-white backdrop-blur-[16px] backdrop-saturate-[1.2] max-xl:h-auto! max-lg:p-5"

@@ -164,7 +164,7 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
             </Link>
             <div className="flex-1" />
             <ul
-              className={`flex items-center gap-10 font-display text-[20px] font-medium leading-[1.5] max-xl:gap-7 max-lg:hidden ${
+              className={`flex items-center gap-10 font-display text-[16px] font-medium leading-[1.5] max-xl:gap-7 max-lg:hidden ${
                 light ? "text-odin-cream" : "text-odin-grey"
               } ${ink}`}
             >
